@@ -1,0 +1,222 @@
+{% extends 'colormania/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container py-5 mt-5">
+    
+    <div class="text-center mb-5">
+        <h1 class="bobby display-4" style="color: #64c1ff;">
+            <i class="fas fa-check-circle me-2"></i> FINALIZAR COMPRA
+        </h1>
+        <p class="lead bobby fs-3" style="color: #131128;">
+            Ingresa tus datos de envío y pago
+        </p>
+    </div>
+
+    <form method="POST" action="">
+        {% csrf_token %}
+        <div class="row">
+            
+            <!-- COLUMNA IZQUIERDA: FORMULARIO -->
+            <div class="col-lg-7 mb-4">
+                
+                <!-- 1. DIRECCIÓN DE ENVÍO -->
+                <div class="card shadow-lg border-0 mb-4" style="border-radius: 20px;">
+                    <div class="card-header bg-white border-0 pt-4 px-4">
+                        <h4 class="bobby" style="color: #ff0088;">1. Dirección de Envío</h4>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Nombre</label>
+                                <input type="text" class="form-control rounded-pill bg-light" value="{{ usuario.nombre }}" readonly>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Teléfono</label>
+                                <input type="text" name="telefono" class="form-control rounded-pill" value="{{ usuario.telefono }}" required>
+                            </div>
+
+                            <div class="col-md-12">
+                                <label class="form-label fw-bold">País</label>
+                                <select name="pais" class="form-select rounded-pill">
+                                    {% for codigo, nombre in paises_choices %}
+                                        <option value="{{ codigo }}" {% if usuario.pais == codigo %}selected{% endif %}>{{ nombre }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Estado / Provincia</label>
+                                <input type="text" name="estado" class="form-control rounded-pill" value="{{ usuario.estado }}" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Ciudad</label>
+                                <input type="text" name="ciudad" class="form-control rounded-pill" value="{{ usuario.ciudad }}" required>
+                            </div>
+
+                            <div class="col-md-8">
+                                <label class="form-label fw-bold">Calle</label>
+                                <input type="text" name="calle" class="form-control rounded-pill" value="{{ usuario.calle }}" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold">Número</label>
+                                <input type="text" name="num_domicilio" class="form-control rounded-pill" value="{{ usuario.num_domicilio }}" required>
+                            </div>
+                            
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold">C.P.</label>
+                                <input type="text" name="codigo_postal" class="form-control rounded-pill" value="{{ usuario.codigo_postal }}" required>
+                            </div>
+                            <div class="col-md-8">
+                                <label class="form-label fw-bold">Referencias / Detalles</label>
+                                <input type="text" name="detalles" class="form-control rounded-pill" value="{{ usuario.detalles }}">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. MÉTODO DE PAGO -->
+                <div class="card shadow-lg border-0" style="border-radius: 20px;">
+                    <div class="card-header bg-white border-0 pt-4 px-4">
+                        <h4 class="bobby" style="color: #ff0088;">2. Método de Pago</h4>
+                    </div>
+                    <div class="card-body p-4">
+                        
+                        <!-- Selección -->
+                        <div class="d-flex gap-3 justify-content-center mb-4 flex-wrap">
+                            <input type="radio" class="btn-check" name="metodo_pago" id="pago_tarjeta" value="TARJETA" autocomplete="off" checked onclick="togglePago('TARJETA')">
+                            <label class="btn btn-outline-primary rounded-pill px-4 bobby" for="pago_tarjeta">
+                                <i class="fas fa-credit-card me-2"></i> Tarjeta
+                            </label>
+
+                            <input type="radio" class="btn-check" name="metodo_pago" id="pago_mercadopago" value="MERCADO_PAGO" autocomplete="off" onclick="togglePago('MERCADO_PAGO')">
+                            <label class="btn btn-outline-info rounded-pill px-4 bobby" for="pago_mercadopago">
+                                <i class="fas fa-handshake me-2"></i> Mercado Pago
+                            </label>
+
+                            <input type="radio" class="btn-check" name="metodo_pago" id="pago_oxxo" value="OXXO" autocomplete="off" onclick="togglePago('OXXO')">
+                            <label class="btn btn-outline-warning rounded-pill px-4 bobby" for="pago_oxxo">
+                                <i class="fas fa-store me-2"></i> OXXO
+                            </label>
+                        </div>
+
+                        <!-- SECCIÓN TARJETA (Visible por defecto) -->
+                        <div id="seccion-tarjeta" class="bg-light p-3 rounded-4 border">
+                            <h5 class="bobby mb-3 text-muted">Datos de la Tarjeta</h5>
+                            <div class="row g-3">
+                                <div class="col-12">
+                                    <label class="small fw-bold">Número de Tarjeta</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-white border-end-0"><i class="fas fa-credit-card"></i></span>
+                                        <input type="text" name="numero_tarjeta" class="form-control border-start-0" placeholder="0000 0000 0000 0000" maxlength="19">
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <label class="small fw-bold">Vencimiento (MM/AA)</label>
+                                    <input type="text" name="fecha_vencimiento" class="form-control" placeholder="MM/AA" maxlength="5">
+                                </div>
+                                <div class="col-6">
+                                    <label class="small fw-bold">CVV / CLABE</label>
+                                    <input type="password" name="clabe" class="form-control" placeholder="123" maxlength="4">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- SECCIÓN INFO OTROS PAGOS (Oculto) -->
+                        <div id="seccion-info" class="alert alert-info mt-3" style="display: none;">
+                            <i class="fas fa-info-circle me-2"></i> 
+                            Serás redirigido para completar tu pago de forma segura al finalizar el pedido.
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- COLUMNA DERECHA: RESUMEN (Sticky) -->
+            <div class="col-lg-5">
+                <div class="card shadow-lg border-0" style="top: 20px; border-radius: 20px; background-color: #f0f8ff;">
+                    <div class="card-body p-4">
+                        <h4 class="bobby mb-4" style="color: #131128;">Resumen del Pedido</h4>
+
+                        <!-- Lista Miniatura -->
+                        <div class="mb-4" style="max-height: 300px; overflow-y: auto;">
+                            {% for item in carrito.items.all %}
+                            <div class="d-flex align-items-center mb-3 border-bottom pb-2">
+                                <div class="me-3">
+                                    {% if item.producto %}
+                                        <img src="{{ item.producto.foto_producto.url }}" class="rounded shadow-sm" width="50" height="50" style="object-fit: cover;">
+                                    {% elif item.sellador %}
+                                        <img src="{{ item.sellador.foto_sellador.url }}" class="rounded shadow-sm" width="50" height="50" style="object-fit: cover;">
+                                    {% elif item.personalizado %}
+                                        <img src="{{ item.personalizado.pintura.foto_pintura.url }}" class="rounded shadow-sm" width="50" height="50" style="object-fit: cover;">
+                                    {% endif %}
+                                </div>
+                                <div class="flex-grow-1">
+                                    <h6 class="mb-0 bobby small text-truncate" style="max-width: 150px;">
+                                        {% if item.producto %}{{ item.producto.nombre }}
+                                        {% elif item.sellador %}{{ item.sellador.nombre }}
+                                        {% elif item.personalizado %}{{ item.personalizado.pintura.nombre }} ({{ item.personalizado.color }})
+                                        {% endif %}
+                                    </h6>
+                                    <small class="text-muted">{{ item.cantidad }} x ${{ item.precio_unitario }}</small>
+                                </div>
+                                <div class="fw-bold text-end">
+                                    ${{ item.subtotal }}
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+
+                        <!-- Totales -->
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-muted">Subtotal</span>
+                            <span class="fw-bold">${{ carrito.total }}</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-4">
+                            <span class="text-muted">Envío</span>
+                            <span class="text-success fw-bold">Gratis</span>
+                        </div>
+                        
+                        <hr>
+                        
+                        <div class="d-flex justify-content-between mb-4 align-items-center">
+                            <span class="fs-4 bobby" style="color: #131128;">TOTAL</span>
+                            <span class="fs-2 bobby" style="color: #ff0088;">${{ carrito.total }}</span>
+                        </div>
+
+                        <button type="submit" class="btn btn-success w-100 btn-lg rounded-pill shadow bobby py-3 transform-hover">
+                            CONFIRMAR PEDIDO <i class="fas fa-check ms-2"></i>
+                        </button>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </form>
+</div>
+
+<script>
+    function togglePago(metodo) {
+        var seccionTarjeta = document.getElementById('seccion-tarjeta');
+        var seccionInfo = document.getElementById('seccion-info');
+
+        if (metodo === 'TARJETA') {
+            seccionTarjeta.style.display = 'block';
+            seccionInfo.style.display = 'none';
+        } else {
+            seccionTarjeta.style.display = 'none';
+            seccionInfo.style.display = 'block';
+        }
+    }
+</script>
+
+<style>
+    .transform-hover:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.15) !important;
+    }
+</style>
+
+{% endblock %}

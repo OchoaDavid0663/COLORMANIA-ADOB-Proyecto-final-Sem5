@@ -1,0 +1,82 @@
+{% extends "colormania/admin/base_admin.html" %}
+{% load static %}
+
+{% block title %}Actualizar Usuario - Admin{% endblock %}
+
+{% block content %}
+<div class="container mt-1 pt-1">
+    <div class="text-center mb-5">
+        <h1 class="bobby display-3" style="color: #ff0088;">
+            ACTUALIZAR USUARIO
+        </h1>
+    </div>
+
+    <div class="card shadow-lg mx-auto" style="max-width: 700px; border-radius: 30px; overflow: hidden;">
+        <div class="card-header text-white text-center py-4" style="background: linear-gradient(135deg, #ff0088, #64c1ff);">
+            <h3 class="bobby mb-0">Editar Información</h3>
+        </div>
+        <div class="card-body p-5">
+            <form method="post">
+                {% csrf_token %}
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <input type="text" name="nombre" value="{{ u.nombre }}" class="form-control form-control-lg rounded-pill" required>
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" name="apellido" value="{{ u.apellido }}" class="form-control form-control-lg rounded-pill" required>
+                    </div>
+                    <div class="col-12">
+                        <input type="email" name="email" value="{{ u.email }}" class="form-control form-control-lg rounded-pill" required>
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" name="telefono" value="{{ u.telefono }}" class="form-control form-control-lg rounded-pill" placeholder="Teléfono">
+                    </div>
+                    <div class="col-md-6">
+                        <input type="password" name="contraseña" class="form-control form-control-lg rounded-pill"
+                               placeholder="Nueva contraseña (dejar vacío para mantener)">
+                    </div>
+
+                    <div class="col-md-6">
+                        <input type="text" name="ciudad" value="{{ u.ciudad }}" class="form-control form-control-lg rounded-pill" required>
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" name="estado" value="{{ u.estado }}" class="form-control form-control-lg rounded-pill" required>
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" name="codigo_postal" value="{{ u.codigo_postal }}" class="form-control form-control-lg rounded-pill" required>
+                    </div>
+                    <div class="col-md-6">
+                        <select name="pais" class="form-select form-select-lg rounded-pill" required>
+                            <option value="">Selecciona un país</option>
+                            {% for code, nombre in paises_choices %}
+                            <option value="{{ code }}" {% if code == u.pais %}selected{% endif %}>{{ nombre }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="col-md-8">
+                        <input type="text" name="calle" value="{{ u.calle }}" class="form-control form-control-lg rounded-pill" required>
+                    </div>
+                    <div class="col-md-4">
+                        <input type="text" name="num_domicilio" value="{{ u.num_domicilio }}" class="form-control form-control-lg rounded-pill" required>
+                    </div>
+
+                    <div class="col-12">
+                        <textarea name="detalles" class="form-control form-control-lg rounded-4" rows="3"
+                                  placeholder="Detalles del domicilio">{{ u.detalles }}</textarea>
+                    </div>
+                </div>
+
+                <div class="text-center mt-5">
+                    <a href="{% url 'lista_usuarios' %}" class="btn btn-secondary btn-lg rounded-pill px-5">
+                        Cancelar
+                    </a>
+                    <button type="submit" class="btn btn-primary btn-lg rounded-pill px-5 shadow-lg">
+                        Guardar Cambios
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

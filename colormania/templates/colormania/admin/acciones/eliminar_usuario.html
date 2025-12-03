@@ -1,0 +1,42 @@
+{% extends "colormania/admin/base_admin.html" %}
+{% load static %}
+
+{% block title %}Eliminar Usuario - Admin{% endblock %}
+
+{% block content %}
+<div class="container mt-1 pt-1">
+    <div class="text-center mb-5">
+        <h1 class="bobby display-3 text-danger">
+            ¿ELIMINAR USUARIO?
+        </h1>
+        <p class="lead bobby fs-3 text-muted">
+            Esta acción <strong>NO se puede deshacer</strong>
+        </p>
+    </div>
+
+    <div class="card shadow-lg mx-auto border-danger" style="max-width: 600px; border-radius: 30px; overflow: hidden;">
+        <div class="card-body text-center p-5">
+            <i class="fas fa-user-slash fa-6x text-danger mb-4"></i>
+            
+            <h2 class="bobby" style="color: #ff0088;">
+                {{ u.nombre }} {{ u.apellido }}
+            </h2>
+            <p class="fs-4"><strong>{{ u.email }}</strong></p>
+            <p class="text-muted fs-5">
+                {{ u.ciudad }}, {{ u.estado }} • {{ u.get_pais_display }}
+            </p>
+
+            <form method="post" class="d-inline">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger btn-lg rounded-pill px-5 shadow">
+                    Sí, Eliminar
+                </button>
+            </form>
+
+            <a href="{% url 'lista_usuarios' %}" class="btn btn-secondary btn-lg rounded-pill px-5 ms-3">
+                No, Cancelar
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

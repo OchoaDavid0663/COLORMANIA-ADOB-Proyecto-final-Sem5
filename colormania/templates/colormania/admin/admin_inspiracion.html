@@ -1,0 +1,34 @@
+{% extends "colormania/admin/base_admin.html" %}
+{% block title %}Admin • Inspiración{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="text-center mb-5">
+        <h1 class="bobby display-4" style="color: #ff0088;">INSPIRACIÓN</h1>
+        <a href="{% url 'subir_inspiracion' %}" class="btn btn-success btn-lg rounded6-pill shadow px-5">
+            Subir Imagen
+        </a>
+    </div>
+
+    <div class="row g-4">
+        {% for img in imagenes %}
+        <div class="col-6 col-md-4 col-lg-3">
+            <div class="position-relative">
+                <img src="{{ img.imagen.url }}" class="img-fluid rounded-4 shadow" style="height: 250px; object-fit: cover;">
+                <div class="position-absolute top-0 end-0 p-2">
+                    <a href="{% url 'eliminar_inspiracion' img.id %}" 
+                       class="btn btn-danger btn-sm rounded-circle shadow" 
+                       onclick="return confirm('¿Eliminar esta imagen?')">
+                        X
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center py-5">
+            <h3 class="text-muted bobby">Aún no hay imágenes</h3>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

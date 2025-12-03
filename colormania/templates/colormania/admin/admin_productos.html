@@ -1,0 +1,133 @@
+{% extends "colormania/admin/base_admin.html" %}
+{% load static %}
+
+{% block title %}Productos y Accesorios - COLORMANIA{% endblock %}
+  
+{% block content %}
+<div class="container mt-1 pt-1">
+    <div class="text-center mb-5">
+        <h1 class="bobby display-4" style="color: #ff0088;">
+            PRODUCTOS Y ACCESORIOS
+        </h1>
+        <a href="{% url 'crear_producto' %}" class="btn btn-success btn-lg rounded-pill shadow px-5 mt-3">
+            Crear Nuevo Producto
+        </a>
+    </div>
+
+    <!-- BARRA DE BÚSQUEDA -->
+    <div class="row mb-4">
+        <div class="col-md-6 offset-md-3">
+            <input type="text" id="buscador" class="form-control form-control-lg rounded-pill shadow" 
+                   placeholder="Buscar producto" 
+                   style="background-color: #64c1ff; color: #131128; font-family: 'bobby';">
+        </div>
+    </div>
+
+    <!-- TABLA CON SCROLL -->
+    <div class="scroll-vertical-container mb-5">
+        <div class="table-responsive" style="max-height: 600px;">
+            <table class="table table-hover align-middle">
+                <thead style="background: linear-gradient(135deg, #131128, #ff0088); color: white; position: sticky; top: 0; z-index: 10;">
+                    <tr class="text-center">
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Descripción</th>
+                        <th>Precio</th>
+                        <th>Stock</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody class="table-light">
+                    {% for p in productos %} 
+                    <tr class="fila-producto text-center align-middle"> <!-- AQUÍ ESTABA EL ERROR -->
+                        <td><span class="badge bg-warning text-dark">{{ p.id }}</span></td>
+                        <td class="fw-bold" style="color: #ff0088;">{{ p.nombre }}</td>
+                        <td>{{ p.descripcion|truncatewords:15 }}</td>
+                        <td><span class="badge" style="background-color: #ffae00; color: #131128;">${{ p.precio }}</span></td>
+                        
+                        {% if p.stock <= 5 %}
+                            <td><span class="badge bg-danger text-white">{{ p.stock }}</span></td>
+                        {% elif p.stock <= 10 %}
+                            <td><span class="badge bg-warning text-dark">{{ p.stock }}</span></td>
+                        {% else %}
+                            <td><span class="badge bg-success text-white">{{ p.stock }}</span></td>
+                        {% endif %}
+
+                        <td>
+                            <a href="{% url 'actualizar_producto' p.id %}" class="btn btn-sm btn-outline-primary rounded-pill">
+                                Actualizar
+                            </a>
+                            <a href="{% url 'eliminar_producto' p.id %}" 
+                            class="btn btn-sm btn-outline-danger rounded-pill"
+                            onclick="return confirm('¿Eliminar {{ p.nombre }}?')">
+                                Eliminar
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center py-5 text-muted bobby fs-4">
+                            No hay productos en inventario
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- TARJETAS -->
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+        {% for producto in productos %}
+        <div class="col">
+            <div class="card h-100 shadow-lg border-0 transform-hover" style="border-radius: 25px;">
+                <a href="#" class="text-decoration-none">
+                    {% if producto.foto_producto %}
+                        <img src="{{ producto.foto_producto.url }}" class="card-img-top" alt="{{ producto.nombre }}" style="height: 280px; object-fit: cover;">
+                    {% else %}
+                        <div class="bg-light d-flex align-items-center justify-content-center" style="height: 280px;">
+                            <h1 class="display-1 text-muted">Tools</h1>
+                        </div>
+                    {% endif %}
+
+                    <div class="card-body text-center p-4">
+                        <h5 class="bobby mb-2" style="color: #131128;">{{ producto.nombre }}</h5>
+                        <p class="text-muted small mb-3">{{ producto.descripcion|truncatewords:12 }}</p>
+                        <p class="fw-bold fs-3" style="color: #64c1ff;">${{ producto.precio }}</p>
+                        <p class="{% if producto.stock > 0 %}text-success{% else %}text-danger{% endif %}">
+                            {% if producto.stock > 0 %}
+                                {{ producto.stock }} disponibles
+                            {% else %}
+                                Agotado
+                            {% endif %}
+                        </p>
+                    </div>
+                </a>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center py-5">
+            <h3 class="text-muted bobby">Pronto tendremos más herramientas...</h3>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- SCRIPT CORREGIDO Y FUNCIONANDO AL 1000% -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const buscador = document.getElementById('buscador');
+    const filas = document.querySelectorAll('.fila-producto'); 
+
+    buscador.addEventListener('keyup', function() {
+        const texto = this.value.toLowerCase().trim();
+
+        filas.forEach(fila => {
+            const contenido = fila.textContent.toLowerCase();
+            fila.style.display = contenido.includes(texto) ? '' : 'none';
+        });
+    });
+});
+</script>
+
+{% endblock %}

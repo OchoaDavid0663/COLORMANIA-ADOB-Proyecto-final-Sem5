@@ -1,0 +1,54 @@
+{% extends "colormania/base.html" %}
+{% load static %}
+
+{% block title %}Colores Fríos - COLORMANIA{% endblock %}
+
+{% block content %}
+<div class="container mt-0 pt-0">
+    <div class="text-center mb-4">
+        <h1 class="bobby display-4" style="color: #64c1ff;">
+            <i class="fas fa-splotch me-3"></i>COLORES FRÍOS DISPONIBLES
+        </h1>
+        <p class="lead bobby fs-2" style="color: #131128;">
+            Códigos listos para tu próxima obra maestra
+        </p>
+    </div>
+
+    <div class="row row-cols-2 row-cols-md-3 row-cols-lg-5 g-4 justify-content-center">
+        {% for color in colores_frios %}
+        <div class="col">
+            <div class="text-center">
+                <input type="color" value="#{{ color.codigo|cut:'#'|lower }}" disabled
+                       class="mx-auto mb-4 rounded-4 shadow-lg"
+                       style="width: 170px; height: 130px; border: 6px solid white; cursor: default; pointer-events: none; box-shadow: 0 12px 30px rgba(0,0,0,0.3);">
+                <h5 class="bobby" style="color: #131128; font-size: 1.6rem; letter-spacing: 3px;">
+                    #{{ color.codigo|upper }}
+                </h5>
+                <p class="text-muted small mb-2">{{ color.descripcion }}</p>
+                <span class="badge bg-light text-dark border">Popularidad {{ color.popularidad }}/10</span>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center py-5">
+            <h3 class="text-muted bobby">Pronto más colores frios...</h3>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Hover suave para las tarjetas -->
+<style>
+.col:hover .rounded-4 {
+    transform: translateY(-8px);
+    transition: all 0.4s ease;
+    box-shadow: 0 20px 40px rgba(100, 193, 255, 0.3) !important;
+}
+</style>
+<script>
+    document.getElementById('color_picker').addEventListener('input', function(e) {
+        const color = e.target.value;
+        document.getElementById('codigo_color').textContent = color.toUpperCase();
+        document.getElementById('codigo_color').style.color = color;
+    });
+</script>
+{% endblock %}

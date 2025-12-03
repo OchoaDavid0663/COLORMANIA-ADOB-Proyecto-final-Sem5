@@ -1,0 +1,212 @@
+{% extends "colormania/admin/base_admin.html" %}
+{% load static %}
+
+{% block title %}Colores{% endblock %}
+
+{% block content %}
+<div class="container mt-0 pt-0">
+    <div class="text-center mb-4">
+    <h1 class="bobby display-4" style="color: #ff0088;">
+        COLORES
+    </h1>
+    <a href="{% url 'crear_color' %}" class="btn btn-success btn-lg rounded-pill shadow px-5 mt-3">
+        Crear Nuevo Color
+    </a>
+</div>
+    <div class="row mb-4">
+        <div class="col-md-6 offset-md-3">
+            <input type="text" id="buscador" class="form-control form-control-lg rounded-pill shadow" 
+                   placeholder="Buscar color" 
+                   style="background-color: #64c1ff; color: #131128; font-family: 'bobby';">
+        </div>
+    </div>
+    <div class="scroll-vertical-container">
+        <div class="scroll-vertical-content">
+
+            <div class="table-responsive" style="max-height: 600px;">
+                <table class="table table-hover align-middle" id="tablaColores"
+                    style="border-radius: 20px; overflow: hidden; background: white;">
+                    <thead style="background: linear-gradient(135deg, #131128, #ff0088); color: white;">
+                        <tr class="text-center">
+                            <th class="bobby">ID</th>
+                            <th class="bobby">Código</th>
+                            <th class="bobby">Descripción</th>
+                            <th class="bobby">Categoria</th>
+                            <th class="bobby">Popularidad</th>
+                            <th class="bobby">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-light">
+                        {% for c in colores %}
+                        <tr class="fila-color text-center align-middle">
+                            <td><span class="badge bg-warning text-dark">{{ c.id }}</span></td>
+                            <td class="fw-bold" style="color: #ff0088;"># {{ c.codigo }}</td>
+                            <td>{{ c.descripcion }}</td>
+
+                            {% if c.get_tipo_display == "Calidos" %}
+                            <td><span class="badge" style="background-color: #ff7300; color: #ffffff;">{{ c.get_tipo_display }}</span></td>
+                            {% elif c.get_tipo_display == "Frios" %}
+                            <td><span class="badge" style="background-color: #00a2ff; color: #131128;">{{ c.get_tipo_display }}</span></td>
+                            {% elif c.get_tipo_display == "Grises" %}
+                            <td><span class="badge" style="background-color: #646464; color: #ffffff;">{{ c.get_tipo_display }}</span></td>
+                            {% elif c.get_tipo_display == "Pasteles" %}
+                            <td><span class="badge" style="background-color: #ea7eae; color: #131128;">{{ c.get_tipo_display }}</span></td>
+                            {% elif c.get_tipo_display == "Vivos" %}
+                            <td><span class="badge" style="background-color: #2bff00; color: #131128;">{{ c.get_tipo_display }}</span></td>
+                            {% endif %}
+                            <td>
+                                <span class="badge" style="background-color: #ffae00; color: #131128;">
+                                    {{ c.popularidad }} / 100
+                                </span>
+                            </td>
+                            <td>
+                                <a href="{% url 'actualizar_color' c.id %}" class="btn btn-sm btn-outline-primary rounded-pill">
+                                    Actualizar
+                                </a>
+                                <a href="{% url 'eliminar_color' c.id %}" 
+                                class="btn btn-sm btn-outline-danger rounded-pill"
+                                onclick="return confirm('¿Seguro que quieres eliminar el color #{{ c.codigo }}?')">
+                                    Eliminar
+                                </a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="7" class="text-center text-muted bobby" style="font-size: 1.5rem; padding: 0 20px;">
+                                Aún no hay colores en catalogo
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- CÁLIDOS -->
+    <div class="mb-5">
+        <h2 class="bobby text-center mb-4" style="color: #ff7300; font-size: 2.2rem;">
+            CÁLIDOS
+        </h2>
+        
+        <!-- Contenedor con scroll horizontal -->
+        <div style="overflow-x: auto; white-space: nowrap; padding: 20px 0;">
+            <div style="display: inline-flex; gap: 30px; padding: 0 20px;">
+                {% for color in colores_calidos|slice:":15" %}
+                <div class="text-center" style="flex: 0 0 auto;">
+                    <input type="color" value="#{{ color.codigo|cut:'#'|lower }}" disabled class="mb-3 rounded-4 shadow-lg" style="width: 150px; height: 120px; border: 6px solid white; cursor: default; pointer-events: none; box-shadow: 0 10px 25px rgba(0,0,0,0.3);">
+                    <h5 class="bobby mt-2" style="color: #131128; font-size: 1.4rem; letter-spacing: 2px;">#{{ color.codigo|upper }}</h5>
+                </div>
+                {% empty %}
+                <div class="text-center text-muted bobby" style="font-size: 1.5rem; padding: 0 20px;">
+                    Sin colores cálidos en catálogo
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <!--FRIOS-->
+    <div class="mb-5">
+        <h2 class="bobby text-center mb-4" style="color: #00a2ff; font-size: 2.2rem;">
+            FRIOS
+        </h2>
+        
+        <!-- Contenedor con scroll horizontal -->
+        <div style="overflow-x: auto; white-space: nowrap; padding: 20px 0;">
+            <div style="display: inline-flex; gap: 30px; padding: 0 20px;">
+                {% for color in colores_frios|slice:":15" %}
+                <div class="text-center" style="flex: 0 0 auto;">
+                    <input type="color" value="#{{ color.codigo|cut:'#'|lower }}" disabled class="mb-3 rounded-4 shadow-lg" style="width: 150px; height: 120px; border: 6px solid white; cursor: default; pointer-events: none; box-shadow: 0 10px 25px rgba(0,0,0,0.3);">
+                    <h5 class="bobby mt-2" style="color: #131128; font-size: 1.4rem; letter-spacing: 2px;">#{{ color.codigo|upper }}</h5>
+                </div>
+                {% empty %}
+                <div class="text-center text-muted bobby" style="font-size: 1.5rem; padding: 0 20px;">
+                    Sin colores frios en catálogo
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <!--GRISES-->
+    <div class="mb-5">
+        <h2 class="bobby text-center mb-4" style="color: #646464; font-size: 2.2rem;">
+            GRISES
+        </h2>
+        
+        <!-- Contenedor con scroll horizontal -->
+        <div style="overflow-x: auto; white-space: nowrap; padding: 20px 0;">
+            <div style="display: inline-flex; gap: 30px; padding: 0 20px;">
+                {% for color in colores_grises|slice:":15" %}
+                <div class="text-center" style="flex: 0 0 auto;">
+                    <input type="color" value="#{{ color.codigo|cut:'#'|lower }}" disabled class="mb-3 rounded-4 shadow-lg" style="width: 150px; height: 120px; border: 6px solid white; cursor: default; pointer-events: none; box-shadow: 0 10px 25px rgba(0,0,0,0.3);">
+                    <h5 class="bobby mt-2" style="color: #131128; font-size: 1.4rem; letter-spacing: 2px;">#{{ color.codigo|upper }}</h5>
+                </div>
+                {% empty %}
+                <div class="text-center text-muted bobby" style="font-size: 1.5rem; padding: 0 20px;">
+                    Sin colores grises en catálogo
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <!--PASTELES-->
+    <div class="mb-5">
+        <h2 class="bobby text-center mb-4" style="color: #ea7eae; font-size: 2.2rem;">
+            PASTELES
+        </h2>
+        
+        <!-- Contenedor con scroll horizontal -->
+        <div style="overflow-x: auto; white-space: nowrap; padding: 20px 0;">
+            <div style="display: inline-flex; gap: 30px; padding: 0 20px;">
+                {% for color in colores_pasteles|slice:":15" %}
+                <div class="text-center" style="flex: 0 0 auto;">
+                    <input type="color" value="#{{ color.codigo|cut:'#'|lower }}" disabled class="mb-3 rounded-4 shadow-lg" style="width: 150px; height: 120px; border: 6px solid white; cursor: default; pointer-events: none; box-shadow: 0 10px 25px rgba(0,0,0,0.3);">
+                    <h5 class="bobby mt-2" style="color: #131128; font-size: 1.4rem; letter-spacing: 2px;">#{{ color.codigo|upper }}</h5>
+                </div>
+                {% empty %}
+                <div class="text-center text-muted bobby" style="font-size: 1.5rem; padding: 0 20px;">
+                    Sin colores pasteles en catálogo
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <!--VIVOS-->
+    <div class="mb-5">
+        <h2 class="bobby text-center mb-4" style="color: #2bff00; font-size: 2.2rem;">
+            VIVOS
+        </h2>
+        
+        <!-- Contenedor con scroll horizontal -->
+        <div style="overflow-x: auto; white-space: nowrap; padding: 20px 0;">
+            <div style="display: inline-flex; gap: 30px; padding: 0 20px;">
+                {% for color in colores_vivos|slice:":15" %}
+                <div class="text-center" style="flex: 0 0 auto;">
+                    <input type="color" value="#{{ color.codigo|cut:'#'|lower }}" disabled class="mb-3 rounded-4 shadow-lg" style="width: 150px; height: 120px; border: 6px solid white; cursor: default; pointer-events: none; box-shadow: 0 10px 25px rgba(0,0,0,0.3);">
+                    <h5 class="bobby mt-2" style="color: #131128; font-size: 1.4rem; letter-spacing: 2px;">#{{ color.codigo|upper }}</h5>
+                </div>
+                {% empty %}
+                <div class="text-center text-muted bobby" style="font-size: 1.5rem; padding: 0 20px;">
+                    Sin colores vivos en catálogo
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const buscador = document.getElementById('buscador');
+    const filas = document.querySelectorAll('.fila-color'); 
+
+    buscador.addEventListener('keyup', function() {
+        const texto = this.value.toLowerCase().trim();
+
+        filas.forEach(fila => {
+            const contenido = fila.textContent.toLowerCase();
+            fila.style.display = contenido.includes(texto) ? '' : 'none';
+        });
+    });
+});
+</script>
+{% endblock %}

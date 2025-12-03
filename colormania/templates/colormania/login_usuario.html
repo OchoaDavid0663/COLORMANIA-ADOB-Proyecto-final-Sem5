@@ -1,0 +1,161 @@
+{% extends 'colormania/base.html' %}
+{% load static %}
+
+{% block title %}Iniciar Sesión - COLORMANIA{% endblock %}
+
+{% block content %}
+<style>
+    /* Estilos específicos para login_usuario.html */
+    body {
+        background-image: url('{% static "colormania/images/brush_strokes_bg.png" %}'); /* Fondo con pinceladas sutiles */
+        background-size: cover;
+        background-attachment: fixed;
+        background-position: center;
+    }
+
+    .login-container {
+        max-width: 500px;
+        margin: 50px auto;
+        padding: 40px;
+        background-color: rgba(255, 255, 255, 0.95); /* Fondo blanco semi-transparente */
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        border: 2px solid #ffae00; /* Borde de color de la paleta */
+    }
+
+    .login-title {
+        font-family: 'bobby';
+        color: #131128;
+        font-size: 2.5em;
+        margin-bottom: 30px;
+        position: relative;
+    }
+
+    .login-title::after {
+        content: '';
+        display: block;
+        width: 80px;
+        height: 4px;
+        background-color: #ff0088;
+        margin: 10px auto 0;
+        border-radius: 2px;
+    }
+
+    .form-group label {
+        font-family: 'sans';
+        color: #131128;
+        font-weight: bold;
+        text-align: left;
+        display: block;
+        margin-bottom: 8px;
+    }
+
+    .form-control {
+        border-radius: 10px;
+        border: 1px solid #64c1ff;
+        padding: 12px 15px;
+        font-size: 1.1em;
+        transition: all 0.3s ease;
+    }
+
+    .form-control:focus {
+        border-color: #ffae00;
+        box-shadow: 0 0 0 0.25rem rgba(255, 174, 0, 0.25);
+    }
+
+    .btn-colormania {
+        background-color: #ff0088;
+        color: #ffe100;
+        font-family: 'bobby';
+        font-size: 1.5em;
+        padding: 12px 30px;
+        border-radius: 50px;
+        border: none;
+        box-shadow: 0 5px 15px rgba(255, 0, 136, 0.3);
+        transition: all 0.3s ease;
+        width: 100%;
+        margin-top: 20px;
+    }
+
+    .btn-colormania:hover {
+        background-color: #d10070;
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(255, 0, 136, 0.4);
+    }
+
+    .alert-error {
+        background-color: #ff0088;
+        color: #ffe100;
+        border-color: #ff0088;
+        font-family: 'sans';
+        border-radius: 8px;
+        padding: 10px 15px;
+        margin-top: 15px;
+        text-align: left;
+        animation: fadeIn 0.5s ease-out;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(-10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .link-admin, .link-register {
+        font-family: 'sans';
+        color: #64c1ff;
+        text-decoration: none;
+        margin-top: 15px;
+        display: block;
+        font-size: 0.95em;
+        transition: color 0.3s ease;
+    }
+
+    .link-admin:hover, .link-register:hover {
+        color: #ffae00;
+        text-decoration: underline;
+    }
+
+    @media (max-width: 768px) {
+        .login-container {
+            margin: 30px 15px;
+            padding: 30px;
+        }
+        .login-title {
+            font-size: 2em;
+        }
+        .btn-colormania {
+            font-size: 1.3em;
+            padding: 10px 20px;
+        }
+    }
+</style>
+
+<div class="login-container">
+    <h2 class="login-title">Iniciar Sesión</h2>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-error mb-3" role="alert">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <form method="post">
+        {% csrf_token %}
+        <div class="mb-3 text-start">
+            <label for="id_email" class="form-label">Email:</label>
+            <input type="email" class="form-control" id="id_email" name="email" required placeholder="tu@email.com">
+        </div>
+        <div class="mb-3 text-start">
+            <label for="id_password" class="form-label">Contraseña:</label>
+            <input type="password" class="form-control" id="id_password" name="password" required placeholder="Tu contraseña">
+        </div>
+        <button type="submit" class="btn-colormania">Ingresar</button>
+    </form>
+
+    <a href="{% url 'login_admin' %}" class="link-admin">¿Eres administrador? Ingresa aquí</a>
+    <a href="{% url 'registro' %}" class="link-register">¿No tienes cuenta? Regístrate</a>
+</div>
+{% endblock %}

@@ -1,0 +1,62 @@
+{% extends "colormania/admin/base_admin.html" %}
+{% load static %}
+
+{% block title %}Actualizar Color - Admin{% endblock %}
+
+{% block content %}
+<div class="container mt-5 pt-5 text-center">
+    <h1 class="bobby display-3" style="color: #ff0088;">
+        ACTUALIZAR COLOR
+    </h1>
+
+    <div class="card shadow-lg mx-auto mt-5" style="max-width: 650px; border-radius: 30px; overflow: hidden;">
+        <div class="card-header text-white py-4" style="background: linear-gradient(135deg, #ff0088, #64c1ff);">
+            <h3 class="bobby mb-0">#{{ c.codigo }} • {{ c.descripcion }}</h3>
+        </div>
+        <div class="card-body p-5">
+            <form method="post">
+                {% csrf_token %}
+
+                <div class="mb-4">
+                    <label class="bobby fs-4 text-dark">Código Hex (sin #)</label>
+                    <input type="text" name="codigo" value="{{ c.codigo }}" maxlength="6" 
+                           class="form-control form-control-lg rounded-pill text-center" required 
+                           style="font-family: 'Courier New', monospace; font-size: 2rem; letter-spacing: 5px;">
+                </div>
+
+                <div class="mb-4">
+                    <label class="bobby fs-4 text-dark">Nombre / Descripción</label>
+                    <input type="text" name="descripcion" value="{{ c.descripcion }}" 
+                           class="form-control form-control-lg rounded-pill" required>
+                </div>
+
+                <div class="mb-4">
+                    <label class="bobby fs-4 text-dark">Categoría</label>
+                    <select name="tipo" class="form-select form-select-lg rounded-pill" required>
+                        <option value="CALIDOS" {% if c.tipo == "CALIDOS" %}selected{% endif %}>Cálidos</option>
+                        <option value="FRIOS" {% if c.tipo == "FRIOS" %}selected{% endif %}>Fríos</option>
+                        <option value="GRISES" {% if c.tipo == "GRISES" %}selected{% endif %}>Grises</option>
+                        <option value="PASTELES" {% if c.tipo == "PASTELES" %}selected{% endif %}>Pasteles</option>
+                        <option value="VIVOS" {% if c.tipo == "VIVOS" %}selected{% endif %}>Vivos</option>
+                    </select>
+                </div>
+
+                <div class="mb-5">
+                    <label class="bobby fs-4 text-dark">Popularidad (0-100)</label>
+                    <input type="number" name="popularidad" value="{{ c.popularidad }}" min="0" max="100" 
+                           class="form-control form-control-lg rounded-pill text-center">
+                </div>
+
+                <div class="mt-4">
+                    <a href="{% url 'admin_colores' %}" class="btn btn-secondary btn-lg rounded-pill px-5">
+                        Cancelar
+                    </a>
+                    <button type="submit" class="btn btn-primary btn-lg rounded-pill px-5 shadow-lg">
+                        Guardar Cambios
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

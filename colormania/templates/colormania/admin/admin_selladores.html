@@ -1,0 +1,145 @@
+{% extends "colormania/admin/base_admin.html" %}
+{% load static %}
+
+{% block title %}Selladores - COLORMANIA{% endblock %}
+
+{% block content %}
+<div class="container mt-0 pt-0">
+    <div class="text-center mb-4">
+        <h1 class="bobby display-4" style="color: #ff0088;">
+            SELLADORES Y BARNICES
+        </h1>
+        <a href="{% url 'crear_sellador' %}" class="btn btn-success btn-lg rounded-pill shadow px-5 mt-3">
+            Crear Nuevo Sellador
+        </a>
+    </div>
+    <div class="row mb-4">
+        <div class="col-md-6 offset-md-3">
+            <input type="text" id="buscador" class="form-control form-control-lg rounded-pill shadow" 
+                   placeholder="Buscar sellador" 
+                   style="background-color: #64c1ff; color: #131128; font-family: 'bobby';">
+        </div>
+    </div>
+    <div class="scroll-vertical-container mb-5">
+        <div class="table-responsive" style="max-height: 600px;">
+            <table class="table table-hover align-middle">
+                <thead style="background: linear-gradient(135deg, #131128, #ff0088); color: white;">
+                    <tr class="text-center">
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Descripción</th>
+                        <th>Precio</th>
+                        <th>Stock</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody class="table-light">
+                    {% for p in selladores %}
+                    <tr class="fila-sellador text-center align-middle">
+                        <td><span class="badge bg-warning text-dark">{{ p.id }}</span></td>
+                        <td class="fw-bold" style="color: #ff0088;">{{ p.nombre }}</td>
+                        <td>{{ p.descripcion|truncatewords:15 }}</td>
+                        <td><span class="badge" style="background-color: #ffae00; color: #131128;">${{ p.precio }}</span></td>
+                        
+                        {% if p.stock <= 5 %}
+                            <td><span class="badge bg-danger text-white">{{ p.stock }}</span></td>
+                        {% elif p.stock <= 10 %}
+                            <td><span class="badge bg-warning text-dark">{{ p.stock }}</span></td>
+                        {% else %}
+                            <td><span class="badge bg-success text-white">{{ p.stock }}</span></td>
+                        {% endif %}
+
+                        <td>
+                            <a href="{% url 'actualizar_sellador' p.id %}" class="btn btn-sm btn-outline-primary rounded-pill">
+                                Actualizar
+                            </a>
+                            <a href="{% url 'eliminar_sellador' p.id %}" 
+                            class="btn btn-sm btn-outline-danger rounded-pill"
+                            onclick="return confirm('¿Eliminar {{ p.nombre }}?')">
+                                Eliminar
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center py-5 text-muted bobby fs-4">
+                            No hay selladores en inventario
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+        {% for sellador in selladores %}
+        <div class="col">
+            <div class="card h-100 shadow-lg border-0 overflow-hidden transform-hover"
+                 style="border-radius: 25px; transition: all 0.4s;">
+                <a href="#" class="text-decoration-none">
+                    {% if sellador.foto_sellador %}
+                        <img src="{{ sellador.foto_sellador.url }}" 
+                             class="card-img-top" 
+                             alt="{{ sellador.nombre }}"
+                             style="height: 280px; object-fit: cover;">
+                    {% else %}
+                        <div class="bg-light d-flex align-items-center justify-content-center" 
+                             style="height: 280px;">
+                            <h1 class="display-1 text-muted">Shield</h1>
+                        </div>
+                    {% endif %}
+
+                    <div class="card-body text-center p-4">
+                        <h5 class="bobby mb-2" style="color: #131128; font-size: 1.3rem;">
+                            {{ sellador.nombre }}
+                        </h5>
+                        <p class="text-muted small mb-3">
+                            {{ sellador.descripcion|truncatewords:12 }}
+                        </p>
+                        <p class="fw-bold fs-3" style="color: #ffae00;">
+                            ${{ sellador.precio }}
+                        </p>
+                        <p class="text-success mb-0">
+                            {% if sellador.stock > 0 %}
+                                <i class="fas fa-check-circle"></i> {{ sellador.stock }} en stock
+                            {% else %}
+                                <i class="fas fa-times-circle text-danger"></i> Agotado
+                            {% endif %}
+                        </p>
+                    </div>
+                </a>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center py-5">
+            <i class="fas fa-shield-alt fa-5x text-muted mb-4"></i>
+            <h3 class="text-muted bobby">Pronto tendremos selladores increíbles...</h3>
+            <p class="text-muted">¡La protección perfecta para tu arte está en camino!</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<style>
+.transform-hover:hover {
+    transform: translateY(-12px) scale(1.03);
+    box-shadow: 0 25px 50px rgba(255, 174, 0, 0.4) !important;
+}
+</style>
+<script>
+        document.addEventListener('DOMContentLoaded', function() {
+    const buscador = document.getElementById('buscador');
+    const filas = document.querySelectorAll('.fila-sellador'); 
+
+    buscador.addEventListener('keyup', function() {
+        const texto = this.value.toLowerCase().trim();
+
+        filas.forEach(fila => {
+            const contenido = fila.textContent.toLowerCase();
+            fila.style.display = contenido.includes(texto) ? '' : 'none';
+        });
+    });
+});
+</script>
+{% endblock %}

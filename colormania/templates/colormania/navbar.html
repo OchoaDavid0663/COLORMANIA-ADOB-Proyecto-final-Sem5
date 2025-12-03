@@ -1,0 +1,80 @@
+{% load static %}
+
+<!-- BARRA DE NAVEGACIÓN EXCLUSIVA PARA ADMINISTRADOR -->
+<nav class="navbar navbar-expand-lg navbar-dark shadow-lg fixed-top" 
+    style="background: #64c1ff; top: 100px; z-index: 998;">
+    <div class="container-fluid">
+
+        <!-- Botón hamburguesa móvil -->
+        <button class="navbar-toggler me-3 border-warning" type="button" data-bs-toggle="collapse" data-bs-target="#adminNavbar">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Menú principal -->
+        <div class="collapse navbar-collapse" id="adminNavbar">
+            <ul class="navbar-nav mx-auto text-center gap-2">
+                
+                <li class="nav-item">
+                    <a class="nav-link bobby fs-5 px-4 py-2 rounded-pill text-white" 
+                        href="#" id="menuBtn">
+                        <i class="fas fa-palette me-2"></i>Colores
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link bobby fs-5 px-4 py-2 rounded-pill text-white" 
+                        href="{% url 'ver_pinturas' %}">
+                        <i class="fas fa-fill-drip me-2"></i>Pinturas
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link bobby fs-5 px-4 py-2 rounded-pill text-white" 
+                        href="{% url 'ver_productos' %}">
+                        <i class="fas fa-paint-brush me-2"></i>Productos
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link bobby fs-5 px-4 py-2 rounded-pill text-white" 
+                        href="{% url 'ver_selladores' %}">
+                        <i class="fas fa-spray-can me-2"></i>Selladores
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link bobby fs-5 px-4 py-2 rounded-pill text-white" 
+                        href="{% url 'ver_inspiracion' %}" class="nav-link">
+                        <i class="fas fa-lightbulb me-2"></i> Inspiración
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<nav class="menu" id="menu">
+    <ul>
+        <li><div class="figura" style="background-color: #ff7300"><a href="{% url 'calidos' %}">CALIDOS</a></li>
+        <li><div class="figura" style="background-color: #00a2ff"><a href="{% url 'frios' %}">FRIOS</a></li>
+        <li><div class="figura" style="background-color: #646464"><a href="{% url 'grises' %}">GRISES</a></li>
+        <li><div class="figura" style="background-color: #ea7eae"><a href="{% url 'pasteles' %}">PASTELES</a></li>
+        <li><div class="figura" style="background-color: #2bff00"><a href="{% url 'vivos' %}">VIVOS</a></li>
+    </ul>
+</nav>
+<script>
+    const menuBtn = document.getElementById ('menuBtn')
+    const menu = document.getElementById('menu')
+    const overlay = document.getElementById('overlay')
+
+    menuBtn.addEventListener('click', toggleMenu)
+    overlay.addEventListener('click', toggleMenu)
+
+    function toggleMenu(){
+        menu.classList.toggle('active');
+        overlay.classList.toggle('active');
+    }
+</script>
+
+<!-- Espacio para que no tape el contenido -->
+<div style="height: 130px;"></div>

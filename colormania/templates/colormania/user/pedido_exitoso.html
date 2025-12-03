@@ -1,0 +1,25 @@
+{% extends 'colormania/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container py-5 mt-5 text-center">
+    <div class="card shadow-lg border-0 mx-auto p-5" style="max-width: 600px; border-radius: 30px;">
+        <div class="mb-4">
+            <i class="fas fa-check-circle text-success" style="font-size: 5rem;"></i>
+        </div>
+        <h1 class="bobby display-4" style="color: #131128;">¡Gracias por tu compra!</h1>
+        <p class="lead text-muted mb-4">Tu pedido #{{ pedido.id }} ha sido confirmado.</p>
+        
+        <div class="bg-light p-4 rounded-4 mb-4 text-start">
+        {% for item in pedido.items.all %}
+            <p class="mb-2"><strong>Total pagado:</strong> ${{ pedido.total_compra }}</p>
+            <p class="mb-2"><strong>Fecha estimada de llegada:</strong> {{ pedido.fecha_llegada }}</p>
+            <p class="mb-0"><strong>Método de Pago:</strong> {{ pedido.get_metodo_pago_display }}</p>
+        </div>
+        {% endfor %}
+        <a href="{% url 'ver_productos' %}" class="btn btn-primary btn-lg rounded-pill px-5 bobby">
+            Volver a Inicio
+        </a>
+    </div>
+</div>
+{% endblock %}

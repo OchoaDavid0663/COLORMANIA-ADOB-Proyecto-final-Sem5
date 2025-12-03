@@ -1,0 +1,231 @@
+{% extends 'colormania/base.html' %}
+{% load static %}
+
+{% block title %}Registro de Usuario - COLORMANIA{% endblock %}
+
+{% block content %}
+<style>
+    /* Estilos específicos para registro.html */
+    body {
+        background-image: url('{% static "colormania/images/brush_strokes_bg.png" %}'); /* Mismo fondo de pinceladas */
+        background-size: cover;
+        background-attachment: fixed;
+        background-position: center;
+    }
+
+    .register-container {
+        max-width: 700px; /* Un poco más ancho para más campos */
+        margin: 50px auto;
+        padding: 40px;
+        background-color: rgba(255, 255, 255, 0.95);
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        border: 2px solid #ffae00;
+    }
+
+    .register-title {
+        font-family: 'bobby';
+        color: #131128;
+        font-size: 2.5em;
+        margin-bottom: 30px;
+        position: relative;
+    }
+
+    .register-title::after {
+        content: '';
+        display: block;
+        width: 100px; /* Un poco más ancho */
+        height: 4px;
+        background-color: #ff0088;
+        margin: 10px auto 0;
+        border-radius: 2px;
+    }
+
+    .form-group label {
+        font-family: 'sans';
+        color: #131128;
+        font-weight: bold;
+        text-align: left;
+        display: block;
+        margin-bottom: 8px;
+    }
+
+    .form-control {
+        border-radius: 10px;
+        border: 1px solid #64c1ff;
+        padding: 12px 15px;
+        font-size: 1.1em;
+        transition: all 0.3s ease;
+    }
+
+    .form-control:focus {
+        border-color: #ffae00;
+        box-shadow: 0 0 0 0.25rem rgba(255, 174, 0, 0.25);
+    }
+
+    .btn-colormania-register {
+        background-color: #ff0088;
+        color: #ffe100;
+        font-family: 'bobby';
+        font-size: 1.5em;
+        padding: 12px 30px;
+        border-radius: 50px;
+        border: none;
+        box-shadow: 0 5px 15px rgba(255, 0, 136, 0.3);
+        transition: all 0.3s ease;
+        width: 100%;
+        margin-top: 20px;
+    }
+
+    .btn-colormania-register:hover {
+        background-color: #d10070;
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(255, 0, 136, 0.4);
+    }
+
+    .alert-error {
+        background-color: #ff0088;
+        color: #ffe100;
+        border-color: #ff0088;
+        font-family: 'sans';
+        border-radius: 8px;
+        padding: 10px 15px;
+        margin-top: 15px;
+        text-align: left;
+        animation: fadeIn 0.5s ease-out;
+    }
+
+    .link-login {
+        font-family: 'sans';
+        color: #64c1ff;
+        text-decoration: none;
+        margin-top: 15px;
+        display: block;
+        font-size: 0.95em;
+        transition: color 0.3s ease;
+    }
+
+    .link-login:hover {
+        color: #ffae00;
+        text-decoration: underline;
+    }
+
+    /* Estilos para las columnas en pantallas pequeñas */
+    @media (max-width: 768px) {
+        .register-container {
+            margin: 30px 15px;
+            padding: 30px;
+        }
+        .register-title {
+            font-size: 2em;
+        }
+        .btn-colormania-register {
+            font-size: 1.3em;
+            padding: 10px 20px;
+        }
+        .form-group.col-md-6 {
+            flex: 0 0 100%; /* Las columnas se apilan */
+            max-width: 100%;
+        }
+    }
+</style>
+
+<div class="register-container">
+    <h2 class="register-title">Crear Cuenta</h2>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-error mb-3" role="alert">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <form method="post">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-md-6 mb-3 text-start">
+                <label for="id_nombre" class="form-label">Nombre:</label>
+                <input type="text" class="form-control" id="id_nombre" name="nombre" required placeholder="Tu nombre">
+            </div>
+            <div class="col-md-6 mb-3 text-start">
+                <label for="id_apellido" class="form-label">Apellido:</label>
+                <input type="text" class="form-control" id="id_apellido" name="apellido" required placeholder="Tu apellido">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3 text-start">
+                <label for="id_email" class="form-label">Email:</label>
+                <input type="email" class="form-control" id="id_email" name="email" required placeholder="tu@email.com">
+            </div>
+            <div class="col-md-6 mb-3 text-start">
+                <label for="id_telefono" class="form-label">Teléfono:</label>
+                <input type="text" class="form-control" id="id_telefono" name="telefono" required placeholder="Ej: +52 55 1234 5678">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3 text-start">
+                <label for="id_contrasena" class="form-label">Contraseña:</label>
+                <input type="password" class="form-control" id="id_contrasena" name="contraseña" required placeholder="Crea una contraseña segura">
+            </div>
+            <div class="col-md-6 mb-3 text-start">
+                <label for="id_confirmar_contrasena" class="form-label">Confirmar Contraseña:</label>
+                <input type="password" class="form-control" id="id_confirmar_contrasena" name="confirmar_contraseña" required placeholder="Repite tu contraseña">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3 text-start">
+                <label for="id_pais" class="form-label">País:</label>
+                <select class="form-select form-control" id="id_pais" name="pais" required>
+                    <option value="">Selecciona tu país</option>
+                    <option value="MEXICO">México</option>
+                    <option value="ESTADOS UNIDOS">Estados Unidos</option>
+                    <option value="GUATEMALA">Guatemala</option>
+                    <option value="EL SALVADOR">El Salvador</option>
+                    <option value="HONDURAS">Honduras</option>
+                    <option value="COSTA RICA">Costa Rica</option>
+                    <option value="PANAMA">Panamá</option>
+                </select>
+            </div>
+            <div class="col-md-6 mb-3 text-start">
+                <label for="id_estado" class="form-label">Estado:</label>
+                <input type="text" class="form-control" id="id_estado" name="estado" required placeholder="Tu estado/provincia">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3 text-start">
+                <label for="id_ciudad" class="form-label">Ciudad:</label>
+                <input type="text" class="form-control" id="id_ciudad" name="ciudad" required placeholder="Tu ciudad">
+            </div>
+            <div class="col-md-6 mb-3 text-start">
+                <label for="id_codigo_postal" class="form-label">Código Postal:</label>
+                <input type="text" class="form-control" id="id_codigo_postal" name="codigo_postal" required placeholder="Tu código postal">
+            </div>
+        </div>
+
+        <div class="mb-3 text-start">
+            <label for="id_calle" class="form-label">Calle:</label>
+            <input type="text" class="form-control" id="id_calle" name="calle" required placeholder="Nombre de tu calle">
+        </div>
+        <div class="row">
+            <div class="col-md-6 mb-3 text-start">
+                <label for="id_num_domicilio" class="form-label">Número Exterior/Interior:</label>
+                <input type="text" class="form-control" id="id_num_domicilio" name="num_domicilio" required placeholder="Número de domicilio">
+            </div>
+            <div class="col-md-6 mb-3 text-start">
+                <label for="id_detalles" class="form-label">Detalles Adicionales:</label>
+                <textarea class="form-control" id="id_detalles" name="detalles" rows="3" placeholder="Información adicional para la entrega (ej. entre calles, referencias)"></textarea>
+            </div>
+        </div>
+
+        <button type="submit" class="btn-colormania-register">Registrarme</button>
+    </form>
+
+    <a href="{% url 'login_usuario' %}" class="link-login">¿Ya tienes cuenta? Inicia sesión</a>
+</div>
+{% endblock %}

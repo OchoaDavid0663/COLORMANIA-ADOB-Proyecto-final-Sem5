@@ -1,0 +1,62 @@
+{% extends "colormania/admin/base_admin.html" %}
+{% load static %}
+
+{% block title %}Crear Color - Admin{% endblock %}
+
+{% block content %}
+<div class="container mt-5 pt-5 text-center">
+    <h1 class="bobby display-3" style="color: #ff0088;">
+        CREAR NUEVO COLOR
+    </h1>
+
+    <div class="card shadow-lg mx-auto mt-5" style="max-width: 650px; border-radius: 30px; overflow: hidden;">
+        <div class="card-header text-white py-4" style="background: linear-gradient(135deg, #ff0088, #64c1ff);">
+            <h3 class="bobby mb-0">Agregar a la Paleta</h3>
+        </div>
+        <div class="card-body p-5">
+            <form method="post">
+                {% csrf_token %}
+
+                <div class="mb-4">
+                    <label class="bobby fs-4 text-dark">Código Hex (sin #)</label>
+                    <input type="text" name="codigo" maxlength="6" class="form-control form-control-lg rounded-pill text-center" 
+                           placeholder="FF0088" required style="font-family: 'Courier New', monospace; font-size: 2rem; letter-spacing: 5px;">
+                </div>
+
+                <div class="mb-4">
+                    <label class="bobby fs-4 text-dark">Nombre / Descripción</label>
+                    <input type="text" name="descripcion" class="form-control form-control-lg rounded-pill" 
+                           placeholder="Ej: Rosa Colormania Intenso" required>
+                </div>
+
+                <div class="mb-4">
+                    <label class="bobby fs-4 text-dark">Categoría</label>
+                    <select name="tipo" class="form-select form-select-lg rounded-pill" required>
+                        <option value="" disabled selected>Selecciona una categoría</option>
+                        <option value="CALIDOS">Cálidos</option>
+                        <option value="FRIOS">Fríos</option>
+                        <option value="GRISES">Grises</option>
+                        <option value="PASTELES">Pasteles</option>
+                        <option value="VIVOS">Vivos</option>
+                    </select>
+                </div>
+
+                <div class="mb-5">
+                    <label class="bobby fs-4 text-dark">Popularidad (0-100)</label>
+                    <input type="number" name="popularidad" value="50" min="0" max="100" 
+                           class="form-control form-control-lg rounded-pill text-center">
+                </div>
+
+                <div class="mt-4">
+                    <a href="{% url 'admin_colores' %}" class="btn btn-secondary btn-lg rounded-pill px-5">
+                        Cancelar
+                    </a>
+                    <button type="submit" class="btn btn-success btn-lg rounded-pill px-5 shadow-lg">
+                        Crear Color
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

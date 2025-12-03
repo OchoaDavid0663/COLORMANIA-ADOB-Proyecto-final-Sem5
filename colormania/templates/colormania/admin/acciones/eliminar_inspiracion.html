@@ -1,0 +1,30 @@
+{% extends "colormania/admin/base_admin.html" %}
+{% load static %}
+
+{% block title %}Eliminar Imagen • Inspiración{% endblock %}
+
+{% block content %}
+<div class="container mt-5 pt-5 text-center">
+    <h1 class="bobby display-3 text-danger">
+        ¿ELIMINAR ESTA IMAGEN?
+    </h1>
+    <p class="lead bobby fs-3 text-muted">No se podrá recuperar</p>
+
+    <div class="card shadow-lg mx-auto border-danger mt-5" style="max-width: 700px; border-radius: 30px;">
+        <div class="card-body p-5 text-center">
+            <img src="{{ img.imagen.url }}" class="img-fluid rounded-4 shadow-lg mb-4" 
+                 style="max-height: 500px; object-fit: cover;">
+            
+            <form method="post" class="d-inline">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger btn-lg rounded-pill px-5 shadow">
+                    Sí, Eliminar Permanentemente
+                </button>
+            </form>
+            <a href="{% url 'admin_inspiracion' %}" class="btn btn-secondary btn-lg rounded-pill px-5 ms-3">
+                No, Cancelar
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

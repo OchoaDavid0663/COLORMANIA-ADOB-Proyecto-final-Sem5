@@ -1,0 +1,81 @@
+{% load static %}
+
+<!-- BARRA DE NAVEGACIÓN EXCLUSIVA PARA ADMINISTRADOR -->
+<nav class="navbar navbar-expand-lg navbar-dark shadow-lg fixed-top" 
+    style="background: #64c1ff; top: 100px; z-index: 998;">
+    <div class="container-fluid">
+
+        <!-- Botón hamburguesa móvil -->
+        <button class="navbar-toggler me-3 border-warning" type="button" data-bs-toggle="collapse" data-bs-target="#adminNavbar">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Menú principal -->
+        <div class="collapse navbar-collapse" id="adminNavbar">
+            <ul class="navbar-nav mx-auto text-center gap-2">
+
+                <li class="nav-item">
+                    <a class="nav-link bobby fs-5 px-4 py-2 rounded-pill text-white" 
+                        href="{% url 'admin_pedidos' %}">
+                        <i class="fas fa-boxes me-2"></i>Pedidos
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link bobby fs-5 px-4 py-2 rounded-pill text-white" 
+                        href="{% url 'admin_pinturas' %}">
+                        <i class="fas fa-fill-drip me-2"></i>Pinturas
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link bobby fs-5 px-4 py-2 rounded-pill text-white" 
+                        href="{% url 'admin_productos' %}">
+                        <i class="fas fa-paint-brush me-2"></i>Productos
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link bobby fs-5 px-4 py-2 rounded-pill text-white" 
+                        href="{% url 'admin_selladores' %}">
+                        <i class="fas fa-spray-can me-2"></i>Selladores
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link bobby fs-5 px-4 py-2 rounded-pill text-white" 
+                        href="{% url 'admin_colores' %}">
+                        <i class="fas fa-palette me-2"></i>Colores
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'admin_inspiracion' %}" class="nav-link text-white bobby">
+                        <i class="fas fa-images me-2"></i> Inspiración
+                    </a>
+                </li>
+
+                <!-- USUARIOS RESALTADO COMO REY -->
+                <li class="nav-item">
+                    <a class="nav-link bobby fs-5 px-4 py-2 rounded-pill fw-bold" 
+                        href="{% url 'lista_usuarios' %}"
+                        style="background: #ffae00; color: #131128 !important;">
+                        <i class="fas fa-users-cog me-2"></i>USUARIOS
+                    </a>
+                </li>
+
+                
+            </ul>
+
+            <!-- Cerrar sesión -->
+            <div class="me-4">
+                <a href="{% url 'logout_admin' %}" 
+                   class="btn btn-outline-primary btn-lg rounded-pill px-4 bobby shadow">
+                    <i class="fas fa-sign-out-alt me-2"></i>Salir
+                </a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- Espacio para que no tape el contenido -->
+<div style="height: 130px;"></div>

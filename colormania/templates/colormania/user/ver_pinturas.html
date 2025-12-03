@@ -1,0 +1,71 @@
+{% extends "colormania/base.html" %}
+{% load static %}
+
+{% block title %}Pinturas - COLORMANIA{% endblock %}
+
+{% block content %}
+<div class="container mt-0 pt-0">
+    <div class="text-center mb-4">
+        <h1 class="bobby display-4" style="color: #ff0088;">
+            NUESTRAS PINTURAS
+        </h1>
+        <p class="lead bobby fs-3" style="color: #131128;">
+            Personaliza tus pinturas para que se acomoden a tu gusto
+        </p>
+    </div>
+
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-5 g-4">
+        {% for pintura in pinturas %}
+        <div class="col">
+            <div class="card h-100 shadow-lg border-0 overflow-hidden transform-hover"
+                 style="border-radius: 25px; cursor: pointer; transition: all 0.4s;">
+                
+                <!-- AL HACER CLIC EN LA CARD ENTERA TE LLEVA A PERSONALIZAR -->
+                <a href="{% url 'personalizar_pintura' pintura.id %}" class="text-decoration-none">
+                    
+                    {% if pintura.foto_pintura %}
+                        <img src="{{ pintura.foto_pintura.url }}" 
+                             class="card-img-top" 
+                             alt="{{ pintura.nombre }}"
+                             style="height: 280px; object-fit: cover;">
+                    {% else %}
+                        <div class="bg-light d-flex align-items-center justify-content-center" 
+                             style="height: 280px;">
+                            <h1 class="display-1 text-muted">Paint</h1>
+                        </div>
+                    {% endif %}
+
+                    <div class="card-body text-center p-4">
+                        <h5 class="bobby mb-2" style="color: #131128; font-size: 1.4rem;">
+                            {{ pintura.nombre }}
+                        </h5>
+                        <p class="text-muted small mb-3">
+                            {{ pintura.descripcion|truncatewords:10 }}
+                        </p>
+                        <p class="fw-bold fs-3" style="color: #ff0088;">
+                            ${{ pintura.precio }}
+                        </p>
+                        <span class="badge rounded-pill px-4 py-2 fs-6 bobby"
+                              style="background: linear-gradient(135deg, #ff0088, #64c1ff); color: white;">
+                            PERSONALIZAR
+                        </span>
+                    </div>
+                </a>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center py-5">
+            <i class="fas fa-heart-broken fa-5x text-muted mb-4"></i>
+            <h3 class="text-muted bobby">Pronto tendremos pinturas increíbles...</h3>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<style>
+.transform-hover:hover {
+    transform: translateY(-5px) scale(1.03);
+    box-shadow: 0 30px 60px rgba(255, 0, 136, 0.5) !important;
+}
+</style>
+{% endblock %}

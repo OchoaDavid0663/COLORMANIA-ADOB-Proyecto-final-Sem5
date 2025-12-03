@@ -1,0 +1,43 @@
+{% extends "colormania/base.html" %}
+{% load static %}
+
+{% block title %}Inspiración • COLORMANIA{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-0 py-5">
+    <div class="text-center mb-5">
+        <h1 class="bobby display-2" style="color: #ff0088; letter-spacing: 3px;">
+            INSPIRACIÓN
+        </h1>
+    </div>
+
+    <!-- MASONRY GRID PURO (sin texto, sin nada) -->
+    <div class="row g-3">
+        {% for img in imagenes %}
+        <div class="col-6 col-md-4 col-lg-3">
+            <div class="inspiracion-img overflow-hidden rounded-4 shadow-lg">
+                <img src="{{ img.imagen.url }}" 
+                     class="img-fluid w-100" 
+                     alt="Inspiración Colormania"
+                     style="height: 350px; object-fit: cover; transition: all 0.5s;">
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center py-5">
+            <h3 class="text-muted bobby">Pronto más inspiración...</h3>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<style>
+.inspiracion-img:hover img {
+    transform: scale(1.15);
+    filter: brightness(1.1);
+}
+.inspiracion-img {
+    cursor: zoom-in;
+    overflow: hidden;
+}
+</style>
+{% endblock %}

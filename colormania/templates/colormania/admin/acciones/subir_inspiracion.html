@@ -1,0 +1,36 @@
+{% extends "colormania/admin/base_admin.html" %}
+{% load static %}
+
+{% block title %}Subir Imagen • Inspiración{% endblock %}
+
+{% block content %}
+<div class="container mt-5 pt-5 text-center">
+    <h1 class="bobby display-3" style="color: #ff0088;">
+        SUBIR NUEVA INSPIRACIÓN
+    </h1>
+
+    <div class="card shadow-lg mx-auto mt-5" style="max-width: 650px; border-radius: 30px; overflow: hidden;">
+        <div class="card-header text-white py-4" style="background: linear-gradient(135deg, #ff0088, #64c1ff);">
+            <h3 class="bobby mb-0">Solo selecciona la imagen</h3>
+        </div>
+        <div class="card-body p-5">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="mb-4">
+                    <input type="file" name="imagen" accept="image/*" 
+                           class="form-control form-control-lg rounded-pill text-center" 
+                           style="padding: 2rem; font-size: 1.2rem;" required>
+                </div>
+                <div class="mt-5">
+                    <a href="{% url 'admin_inspiracion' %}" class="btn btn-secondary btn-lg rounded-pill px-5">
+                        Cancelar
+                    </a>
+                    <button type="submit" class="btn btn-success btn-lg rounded-pill px-5 shadow-lg">
+                        Subir Imagen
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

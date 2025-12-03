@@ -1,0 +1,41 @@
+{% extends "colormania/admin/base_admin.html" %}
+{% load static %}
+
+{% block title %}Eliminar Color - Admin{% endblock %}
+
+{% block content %}
+<div class="container mt-5 pt-5 text-center">
+    <h1 class="bobby display-3 text-danger">
+        ¿ELIMINAR ESTE COLOR?
+    </h1>
+    <p class="lead bobby fs-3 text-muted">Esta acción no se puede deshacer</p>
+
+    <div class="card shadow-lg mx-auto border-danger mt-5" style="max-width: 600px; border-radius: 30px;">
+        <div class="card-body p-5 text-center">
+            <div class="mb-4">
+                <input type="color" value="#{{ c.codigo }}" disabled 
+                       style="width: 200px; height: 200px; border: 8px solid white; border-radius: 50%; box-shadow: 0 15px 35px rgba(0,0,0,0.3);">
+            </div>
+            <h2 class="bobby Rfs-1" style="color: #ff0088; font-size: 3rem;">
+                #{{ c.codigo }}
+            </h2>
+            <h4 class="bobby text-dark">{{ c.descripcion }}</h4>
+            <p class="fs-5">
+                <strong>Categoría:</strong> 
+                <span class="badge fs-6" style="background-color: #ffae00;">{{ c.get_tipo_display }}</span>
+            </p>
+
+            <form method="post" class="d-inline">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger btn-lg rounded-pill px-5 shadow">
+                    Sí, Eliminar Permanentemente
+                </button>
+            </form>
+
+            <a href="{% url 'admin_colores' %}" class="btn btn-secondary btn-lg rounded-pill px-5 ms-3">
+                No, Cancelar
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,145 @@
+{% extends "colormania/admin/base_admin.html" %}
+{% load static %}
+ 
+{% block title %}Pinturas - COLORMANIA{% endblock %}
+ 
+{% block content %}
+<div class="container mt-1 pt-1">
+    <div class="text-center mb-5">
+        <h1 class="bobby display-4" style="color: #ff0088;">
+            PINTURAS
+        </h1>
+        <a href="{% url 'crear_pintura' %}" class="btn btn-success btn-lg rounded-pill shadow px-5 mt-3">
+            Crear Nueva Pintura
+        </a>
+    </div>
+    <div class="row mb-4">
+        <div class="col-md-6 offset-md-3">
+            <input type="text" id="buscador" class="form-control form-control-lg rounded-pill shadow" 
+                   placeholder="Buscar pintura" 
+                   style="background-color: #64c1ff; color: #131128; font-family: 'bobby';">
+        </div>
+    </div>
+    <!-- TABLA CON SCROLL -->
+    <div class="scroll-vertical-container mb-5">
+        <div class="table-responsive" style="max-height: 600px;">
+            <table class="table table-hover align-middle">
+                <thead style="background: linear-gradient(135deg, #131128, #ff0088); color: white;">
+                    <tr class="text-center">
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Descripción</th>
+                        <th>Precio</th>
+                        <th>Stock</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody class="table-light">
+                    {% for p in pinturas %}
+                    <tr class="fila-sellador text-center align-middle">
+                        <td><span class="badge bg-warning text-dark">{{ p.id }}</span></td>
+                        <td class="fw-bold" style="color: #ff0088;">{{ p.nombre }}</td>
+                        <td>{{ p.descripcion|truncatewords:15 }}</td>
+                        <td><span class="badge" style="background-color: #ffae00; color: #131128;">${{ p.precio }}</span></td>
+                        
+                        {% if p.stock <= 5 %}
+                            <td><span class="badge bg-danger text-white">{{ p.stock }}</span></td>
+                        {% elif p.stock <= 10 %}
+                            <td><span class="badge bg-warning text-dark">{{ p.stock }}</span></td>
+                        {% else %}
+                            <td><span class="badge bg-success text-white">{{ p.stock }}</span></td>
+                        {% endif %}
+
+                        <td>
+                            <a href="{% url 'actualizar_pintura' p.id %}" class="btn btn-sm btn-outline-primary rounded-pill">
+                                Actualizar
+                            </a>
+                            <a href="{% url 'eliminar_pintura' p.id %}" 
+                            class="btn btn-sm btn-outline-danger rounded-pill"
+                            onclick="return confirm('¿Eliminar la pintura {{ p.nombre }}?')">
+                                Eliminar
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center py-5 text-muted bobby fs-4">
+                            No hay pinturas en inventario
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- TARJETAS DE PRODUCTOS -->
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+        {% for p in pinturas %}   <!-- AQUÍ ESTABA EL ERROR: era "pinturaa" -->
+        <div class="col">
+            <div class="card h-100 shadow-lg border-0" style="border-radius: 25px; transition: all 0.4s;">
+                <a href="#" class="text-decoration-none">
+                    {% if p.foto_pintura %}
+                        <img src="{{ p.foto_pintura.url }}" class="card-img-top" alt="{{ p.nombre }}" style="height: 280px; object-fit: cover;">
+                    {% else %}
+                        <div class="bg-light d-flex align-items-center justify-content-center" style="height: 280px;">
+                            <h1 class="display-1 text-muted">Pintura</h1>
+                        </div>
+                    {% endif %}
+
+                    <div class="card-body text-center p-4">
+                        <h5 class="bobby mb-2" style="color: #131128;">{{ p.nombre }}</h5>
+                        <p class="text-muted small mb-3">{{ p.descripcion|truncatewords:12 }}</p>
+                        <p class="fw-bold fs-3" style="color: #ff0088;">${{ p.precio }}</p>
+                        <p class="{% if p.stock > 0 %}text-success{% else %}text-danger{% endif %}">
+                            {% if p.stock > 0 %}
+                                {{ p.stock }} en stock
+                            {% else %}
+                                Agotado
+                            {% endif %}
+                        </p>
+                    </div>
+                </a>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center py-5">
+            <h3 class="text-muted bobby">Pronto tendremos pinturas increíbles...</h3>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<style>
+.card:hover {
+    transform: translateY(-12px);
+    box-shadow: 0 25px 50px rgba(255, 0, 136, 0.4) !important;
+}
+.scroll-vertical-container {
+    max-height: 600px;
+    overflow-y: auto;
+}
+.scroll-vertical-container::-webkit-scrollbar {
+    width: 14px;
+}
+.scroll-vertical-container::-webkit-scrollbar-thumb {
+    background: #ff0088;
+    border-radius: 10px;
+}
+</style>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+    const buscador = document.getElementById('buscador');
+    const filas = document.querySelectorAll('.fila-sellador'); 
+
+    buscador.addEventListener('keyup', function() {
+        const texto = this.value.toLowerCase().trim();
+
+        filas.forEach(fila => {
+            const contenido = fila.textContent.toLowerCase();
+            fila.style.display = contenido.includes(texto) ? '' : 'none';
+        });
+    });
+});
+</script>
+{% endblock %}

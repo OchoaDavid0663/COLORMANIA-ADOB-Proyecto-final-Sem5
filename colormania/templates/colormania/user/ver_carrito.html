@@ -1,0 +1,223 @@
+{% extends 'colormania/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container py-0 mt-0">
+    
+    <!-- ENCABEZADO -->
+    <div class="text-center mb-5">
+        <h1 class="bobby display-4" style="color: #ff0088;">
+            <i class="fas fa-shopping-cart me-2"></i> TU CARRITO
+        </h1>
+        <p class="lead bobby fs-3" style="color: #131128;">
+            Revisa tus productos antes de finalizar
+        </p>
+    </div>
+
+    <!-- ============================================================== -->
+    <!--                   SECCIÓN DEL CARRITO ACTUAL                   -->
+    <!-- ============================================================== -->
+    {% if carrito.items.all %}
+    <div class="row">
+        <!-- LISTA DE PRODUCTOS (Lado Izquierdo) -->
+        <div class="col-lg-8">
+            <div class="card shadow-lg border-0" style="border-radius: 20px; overflow: hidden;">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="bg-light">
+                            <tr>
+                                <th class="py-3 ps-4 bobby" style="color: #131128;">Producto</th>
+                                <th class="py-3 bobby text-center">Precio</th>
+                                <th class="py-3 bobby text-center">Cantidad</th>
+                                <th class="py-3 bobby text-center">Subtotal</th>
+                                <th class="py-3"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in carrito.items.all %}
+                            <tr>
+                                <!-- COLUMNA PRODUCTO -->
+                                <td class="ps-4 py-3">
+                                    <div class="d-flex align-items-center">
+                                        <div class="me-3 position-relative">
+                                            {% if item.producto and item.producto.foto_producto %}
+                                                <img src="{{ item.producto.foto_producto.url }}" class="rounded-3 shadow-sm" style="width: 70px; height: 70px; object-fit: cover;">
+                                            {% elif item.sellador and item.sellador.foto_sellador %}
+                                                <img src="{{ item.sellador.foto_sellador.url }}" class="rounded-3 shadow-sm" style="width: 70px; height: 70px; object-fit: cover;">
+                                            {% elif item.personalizado and item.personalizado.pintura.foto_pintura %}
+                                                <img src="{{ item.personalizado.pintura.foto_pintura.url }}" class="rounded-3 shadow-sm" style="width: 70px; height: 70px; object-fit: cover;">
+                                                <input type="color" value="{{ item.personalizado.color }}" disabled 
+                                                    style="width: 30px; height: 30px; pointer-events: none; box-shadow: 0 12px 30px rgba(0,0,0,0.3);">
+                                            {% else %}
+                                                <div class="bg-light rounded-3 d-flex align-items-center justify-content-center text-muted" style="width: 70px; height: 70px;">
+                                                    <i class="fas fa-image"></i>
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                        <div>
+                                            {% if item.producto %}
+                                                <h5 class="mb-0 bobby" style="color: #131128;">{{ item.producto.nombre }}</h5>
+                                                <small class="text-muted">Producto</small>
+                                            {% elif item.sellador %}
+                                                <h5 class="mb-0 bobby" style="color: #131128;">{{ item.sellador.nombre }}</h5>
+                                                <small class="text-muted">Sellador</small>
+                                            {% elif item.personalizado %}
+                                                <h5 class="mb-0 bobby" style="color: #131128;">{{ item.personalizado.pintura.nombre }}</h5>
+                                                <small class="text-muted">Personalizado: {{ item.personalizado.color }}</small>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </td>
+                                <!-- PRECIO -->
+                                <td class="text-center fw-bold text-muted">${{ item.precio_unitario }}</td>
+                                <!-- CANTIDAD -->
+                                <td class="text-center">
+                                    <div class="d-inline-flex align-items-center bg-light rounded-pill px-2 py-1 border">
+                                        <a href="{% url 'actualizar_item' item.id 'restar' %}" class="btn btn-sm btn-link text-decoration-none text-danger fw-bold"><i class="fas fa-minus"></i></a>
+                                        <span class="mx-2 fw-bold" style="min-width: 20px;">{{ item.cantidad }}</span>
+                                        <a href="{% url 'actualizar_item' item.id 'sumar' %}" class="btn btn-sm btn-link text-decoration-none text-success fw-bold"><i class="fas fa-plus"></i></a>
+                                    </div>
+                                </td>
+                                <!-- SUBTOTAL -->
+                                <td class="text-center fw-bold" style="color: #ff0088; font-size: 1.1rem;">${{ item.subtotal }}</td>
+                                <!-- ELIMINAR -->
+                                <td class="text-center pe-4">
+                                    <a href="{% url 'actualizar_item' item.id 'eliminar' %}" class="text-danger transform-hover-icon" onclick="return confirm('¿Seguro que deseas eliminar este producto?');">
+                                        <i class="fas fa-trash-alt fa-lg"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="mt-4">
+                <a href="{% url 'ver_productos' %}" class="btn btn-outline-secondary rounded-pill px-4 bobby">
+                    <i class="fas fa-arrow-left me-2"></i> Seguir Comprando
+                </a>
+            </div>
+        </div>
+
+        <!-- RESUMEN DE COMPRA (Lado Derecho) -->
+        <div class="col-lg-4 mt-4 mt-lg-0">
+            <div class="card shadow-lg border-0" style="border-radius: 20px; background-color: #f8f9fa;">
+                <div class="card-body p-4">
+                    <h4 class="bobby mb-4" style="color: #131128;">Resumen del Pedido</h4>
+                    <div class="d-flex justify-content-between mb-3">
+                        <span class="text-muted">Subtotal</span>
+                        <span class="fw-bold">${{ carrito.total }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-3">
+                        <span class="text-muted">Envío estimado</span>
+                        <span class="text-success fw-bold">Gratis</span>
+                    </div>
+                    <hr>
+                    <div class="d-flex justify-content-between mb-4 align-items-center">
+                        <span class="fs-4 bobby" style="color: #131128;">TOTAL</span>
+                        <span class="fs-2 bobby" style="color: #ff0088;">${{ carrito.total }}</span>
+                    </div>
+                    <a href="{% url 'realizar_pedido' %}" class="btn btn-success w-100 btn-lg rounded-pill shadow bobby py-3 transform-hover">
+                        Realizar Pedido 
+                    </a>
+                    <div class="text-center mt-3">
+                        <small class="text-muted"><i class="fas fa-lock me-1"></i> Pago 100% Seguro</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+        <!-- CARRITO VACÍO -->
+        <div class="text-center py-5">
+            <div class="mb-4"><i class="fas fa-shopping-basket fa-7x text-muted opacity-25"></i></div>
+            <h3 class="bobby text-muted mb-3">Tu carrito está vacío</h3>
+            <p class="text-muted mb-4">¡Llénalo con colores y creatividad!</p>
+            <a href="{% url 'ver_productos' %}" class="btn btn-primary btn-lg rounded-pill px-5 shadow bobby">Ir a la Tienda</a>
+        </div>
+    {% endif %}
+
+    <!-- ============================================================== -->
+    <!--           NUEVA SECCIÓN: HISTORIAL DE PEDIDOS                  -->
+    <!-- ============================================================== -->
+    
+    <hr class="my-5" style="border-top: 3px dashed #e0e0e0;">
+
+    <div class="mt-5 mb-5">
+        <h2 class="bobby text-center mb-4" style="color: #64c1ff;">
+            <i class="fas fa-history me-2"></i> HISTORIAL DE PEDIDOS
+        </h2>
+
+        {% if pedidos %}
+        <div class="card shadow-lg border-0" style="border-radius: 25px; overflow: hidden;">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0 text-center">
+                    <thead class="text-white" style="background: #64c1ff;">
+                        <tr>
+                            <th class="py-3 bobby">Pedido #</th>
+                            <th class="py-3 bobby">Fecha Compra</th>
+                            <th class="py-3 bobby">Total</th>
+                            <th class="py-3 bobby">Fecha Llegada (Est.)</th>
+                            <th class="py-3 bobby">Estado Envío</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for p in pedidos %}
+                        <tr>
+                            <td class="fw-bold text-muted">#{{ p.id }}</td>
+                            <td>{{ p.fecha|date:"d M Y" }}</td>
+                            <td class="fw-bold" style="color: #ff0088;">${{ p.total_compra }}</td>
+                            <td>
+                                {% if p.fecha_llegada %}
+                                    <i class="fas fa-calendar-alt text-muted me-1"></i> {{ p.fecha_llegada|date:"d M Y" }}
+                                {% else %}
+                                    <span class="text-muted">—</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if "Entregado" in p.estado_envio %}
+                                    <span class="badge bg-success rounded-pill px-3 py-2">
+                                        <i class="fas fa-check-circle me-1"></i> Entregado
+                                    </span>
+                                {% elif "Cancelado" in p.estado_envio %}
+                                    <span class="badge bg-danger rounded-pill px-3 py-2">Cancelado</span>
+                                {% elif "Enviado" in p.estado_envio %}
+                                    <span class="badge bg-info text-dark rounded-pill px-3 py-2">
+                                        <i class="fas fa-truck me-1"></i> Enviado
+                                    </span>
+                                {% else %}
+                                    <span class="badge bg-warning text-dark rounded-pill px-3 py-2">
+                                        <i class="fas fa-clock me-1"></i> {{ p.estado_envio }}
+                                    </span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% else %}
+            <div class="text-center p-4 bg-light rounded-4 shadow-sm">
+                <p class="text-muted bobby fs-5 mb-0">Aún no has realizado ningún pedido.</p>
+            </div>
+        {% endif %}
+    </div>
+
+</div>
+
+<style>
+    .transform-hover-icon:hover {
+        transform: scale(1.2);
+        transition: transform 0.2s;
+        cursor: pointer;
+    }
+    
+    .table > :not(caption) > * > * {
+        background-color: transparent;
+        border-bottom-width: 1px;
+    }
+</style>
+
+{% endblock %}

@@ -1,0 +1,42 @@
+{% extends "colormania/admin/base_admin.html" %}
+{% block title %}Crear Sellador{% endblock %}
+
+{% block content %}
+<div class="container mt-5 pt-5 text-center">
+    <h1 class="bobby display-3" style="color: #ff0088;">CREAR NUEVO SELLADOR</h1>
+
+    <div class="card shadow-lg mx-auto mt-5" style="max-width: 700px; border-radius: 30px;">
+        <div class="card-header text-white py-4" style="background: linear-gradient(135deg, #ff0088, #64c1ff);">
+            <h3 class="bobby mb-0">Agregar al Inventario</h3>
+        </div>
+        <div class="card-body p-5">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="mb-4">
+                    <input type="text" name="nombre" class="form-control form-control-lg rounded-pill" placeholder="Nombre del sellador" required>
+                </div>
+                <div class="mb-4">
+                    <textarea name="descripcion" class="form-control form-control-lg rounded-4" rows="4" placeholder="Descripción completa" required></textarea>
+                </div>
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <input type="number" step="0.01" name="precio" class="form-control form-control-lg rounded-pill" placeholder="Precio" required>
+                    </div>
+                    <div class="col-md-6">
+                        <input type="number" name="stock" class="form-control form-control-lg rounded-pill" placeholder="Stock inicial" required>
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <label class="bobby fs-5 d-block mb-3">Foto del Sellador</label>
+                    <input type="file" name="foto_sellador" accept="image/*" class="form-control form-control-lg rounded-pill">
+                </div>
+
+                <div class="mt-5">
+                    <a href="{% url 'admin_selladores' %}" class="btn btn-secondary btn-lg rounded-pill px-5">Cancelar</a>
+                    <button type="submit" class="btn btn-success btn-lg rounded-pill px-5 shadow-lg">Crear Sellador</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

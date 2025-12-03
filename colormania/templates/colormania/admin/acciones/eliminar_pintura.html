@@ -1,0 +1,36 @@
+{% extends "colormania/admin/base_admin.html" %}
+{% block title %}Eliminar Pintura{% endblock %}
+
+{% block content %}
+<div class="container mt-5 pt-5 text-center">
+    <h1 class="bobby display-3 text-danger">¿ELIMINAR PINTURA?</h1>
+    <p class="lead bobby fs-3 text-muted">Esta acción no se puede deshacer</p>
+
+    <div class="card shadow-lg mx-auto border-danger mt-5" style="max-width: 650px; border-radius: 30px;">
+        <div class="card-body p-5 text-center">
+            {% if p.foto_pintura %}
+                <img src="{{ p.foto_pintura.url }}" class="img-fluid rounded-4 shadow mb-4" style="max-height: 300px; object-fit: cover;">
+            {% else %}
+                <div class="bg-light d-flex align-items-center justify-content-center mb-4" style="height: 280px; border-radius: 25px;">
+                    <h1 class="display-1 text-muted">Pintura</h1>
+                </div>
+            {% endif %}
+            
+            <h2 class="bobby" style="color: #ff0088; font-size: 3rem;">{{ p.nombre }}</h2>
+            <p class="fs-4 text-muted">{{ p.descripcion|truncatewords:12 }}</p>
+            <p class="fw-bold fs-2" style="color: #ff0088;">${{ p.precio }}</p>
+            <p class="fs-5">Stock actual: <strong>{{ p.stock }}</strong></p>
+
+            <form method="post" class="d-inline">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger btn-lg rounded-pill px-5 shadow">
+                    Sí, Eliminar Permanentemente
+                </button>
+            </form>
+            <a href="{% url 'admin_pinturas' %}" class="btn btn-secondary btn-lg rounded-pill px-5 ms-3">
+                No, Cancelar
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

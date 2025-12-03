@@ -1,0 +1,36 @@
+{% extends "colormania/admin/base_admin.html" %}
+{% block title %}Eliminar Sellador{% endblock %}
+
+{% block content %}
+<div class="container mt-5 pt-5 text-center">
+    <h1 class="bobby display-3 text-danger">¿ELIMINAR SELLADOR?</h1>
+    <p class="lead bobby fs-3 text-muted">Esta acción no se puede deshacer</p>
+
+    <div class="card shadow-lg mx-auto border-danger mt-5" style="max-width: 650px; border-radius: 30px;">
+        <div class="card-body p-5 text-center">
+            {% if s.foto_sellador %}
+                <img src="{{ s.foto_sellador.url }}" class="img-fluid rounded-4 shadow mb-4" style="max-height: 300px;">
+            {% else %}
+                <div class="bg-light d-flex align-items-center justify-content-center mb-4" style="height: 250px; border-radius: 25px;">
+                    <h1 class="display-1 text-muted">Shield</h1>
+                </div>
+            {% endif %}
+            
+            <h2 class="bobby" style="color: #ff0088; font-size: 2.5rem;">{{ s.nombre }}</h2>
+            <p class="fs-4 text-muted">{{ s.descripcion|truncatewords:10 }}</p>
+            <p class="fw-bold fs-3 text-warning">${{ s.precio }}</p>
+            <p class="fs-5">Stock: <strong>{{ s.stock }}</strong></p>
+
+            <form method="post" class="d-inline">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger btn-lg rounded-pill px-5 shadow">
+                    Sí, Eliminar
+                </button>
+            </form>
+            <a href="{% url 'admin_selladores' %}" class="btn btn-secondary btn-lg rounded-pill px-5 ms-3">
+                No, Cancelar
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

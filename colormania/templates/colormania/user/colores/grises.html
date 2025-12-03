@@ -1,0 +1,40 @@
+{% extends "colormania/base.html" %}
+{% load static %}
+
+{% block title %}Colores Grises - COLORMANIA{% endblock %}
+
+{% block content %}
+<div class="container mt-0 pt-0">
+    <div class="text-center mb-4">
+        <h1 class="bobby display-4" style="color: #646464;">
+            <i class="fas fa-splotch me-3"></i>COLORES GRISES Y NEUTROS DISPONIBLES
+        </h1>
+        <p class="lead bobby fs-3 text-muted">Elegancia minimalista y atemporal</p>
+    </div>
+
+    <div class="row row-cols-2 row-cols-md-3 row-cols-lg-5 g-5 justify-content-center">
+        {% for color in colores_grises %}
+        <div class="col">
+            <div class="text-center">
+                <input type="color" value="#{{ color.codigo|cut:'#'|lower }}" disabled
+                       class="mx-auto mb-4 rounded-4 shadow-lg"
+                       style="width: 170px; height: 130px; border: 6px solid white; cursor: default; pointer-events: none; box-shadow: 0 12px 30px rgba(0,0,0,0.4);">
+                <h5 class="bobby" style="color: #131128; font-size: 1.6rem; letter-spacing: 3px;">
+                    #{{ color.codigo|upper }}
+                </h5>
+                <p class="text-muted small mb-2">{{ color.descripcion }}</p>
+                <span class="badge bg-secondary text-white">Popularidad {{ color.popularidad }}/10</span>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center py-5">
+            <h3 class="text-muted bobby">Pronto más tonos grises...</h3>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<style>
+input[type="color"]:hover { transform: scale(1.08); box-shadow: 0 20px 40px rgba(136,136,136,0.6) !important; }
+</style>
+{% endblock %}

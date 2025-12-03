@@ -1,0 +1,85 @@
+{% extends "colormania/base.html" %}
+{% load static %}
+
+{% block title %}Personalizar • {{ pintura.nombre }}{% endblock %}
+
+{% block content %}
+<div class="container py-5 mt-5">
+    <div class="text-center mb-5">
+        <h1 class="bobby display-3" style="color: #ff0088;">
+            PERSONALIZA TU PINTURA
+        </h1>
+        <p class="lead bobby fs-2">¡Hazla única con tu color!</p>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-lg border-0" style="border-radius: 30px; overflow: hidden;">
+                <div class="card-header text-white text-center py-5" 
+                     style="background: linear-gradient(135deg, #ff0088, #64c1ff);">
+                    <h2 class="bobby mb-0">{{ pintura.nombre }}</h2>
+                    <p class="fs-4 mb-0">${{ pintura.precio }} MXN</p>
+                </div>
+                <div class="card-body p-5 text-center">
+                    {% if pintura.foto_pintura %}
+                        <img src="{{ pintura.foto_pintura.url }}" class="img-fluid rounded-4 shadow mb-5" 
+                             style="max-height: 380px; object-fit: cover;">
+                    {% endif %}
+
+                    <!-- FORMULARIO ESTÁNDAR (Aquí no hace falta JS para enviar) -->
+                    <form method="POST" action="{% url 'personalizar_pintura' pintura.id %}">
+                        {% csrf_token %}
+                        
+                        <!-- SELECCIÓN DE COLOR -->
+                        <div class="mb-4">
+                            <label class="bobby fs-3 d-block mb-3">Elige tu color</label>
+                            <input type="color" name="color" id="colorInput" value="#ff0088" required
+                                style="width: 120px; height: 120px; border: none; cursor: pointer; background: none;">
+                        </div>
+
+                        <!-- VISTA PREVIA DEL CÓDIGO -->
+                        <div class="mb-4">
+                            <input type="text" id="colorPreview" class="form-control form-control-lg rounded-pill text-center mx-auto"
+                                style="font-family: monospace; font-size: 1.5rem; width: 200px;" readonly value="#FF0088">
+                        </div>
+
+                        <!-- SELECCIÓN DE CANTIDAD (Agregado para consistencia) -->
+                        <div class="mb-5 d-flex justify-content-center align-items-center gap-3">
+                            <label class="bobby fs-4 mb-0">Cantidad:</label>
+                            <input type="number" name="cantidad" value="1" min="1" 
+                                   class="form-control text-center rounded-pill" 
+                                   style="width: 100px; font-size: 1.2rem; border: 2px solid #64c1ff;">
+                        </div>
+
+                        <!-- BOTONES -->
+                        <div class="mt-4">
+                            <a href="{% url 'ver_pinturas' %}" class="btn btn-secondary btn-lg rounded-pill px-5 me-2">
+                                Cancelar
+                            </a>
+                            <!-- Al ser type="submit", envía el formulario automáticamente -->
+                            <button type="submit" class="btn btn-success btn-lg rounded-pill px-5 shadow-lg bobby">
+                                <i class="fas fa-cart-plus me-2"></i> GUARDAR Y AGREGAR
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Script solo para actualizar el texto del color (Visual) -->
+<script>
+    // Se ejecuta cuando la página carga para asegurar que el input y el texto coincidan
+    window.onload = function() {
+        var colorInput = document.getElementById('colorInput');
+        var colorPreview = document.getElementById('colorPreview');
+
+        colorInput.addEventListener('input', function(e) {
+            colorPreview.value = e.target.value.toUpperCase();
+            // Opcional: Cambiar el borde del input de texto al color seleccionado
+            colorPreview.style.borderColor = e.target.value;
+        });
+    };
+</script>
+{% endblock %}

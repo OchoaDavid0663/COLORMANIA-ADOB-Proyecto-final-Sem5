@@ -1,0 +1,83 @@
+{% extends "colormania/admin/base_admin.html" %}
+{% load static %}
+
+{% block title %}Admin • Usuarios - COLORMANIA{% endblock %}
+
+{% block content %}
+<div class="container mt-0 pt-0">
+    <div class="text-center mb-4">
+        <h1 class="bobby display-4" style="color: #ff0088;">
+            Usuarios Registrados
+        </h1>
+        
+        <!-- BOTÓN CREAR NUEVO USUARIO (ÉPICO) -->
+        <a href="{% url 'crear_usuario' %}" class="btn btn-success btn-lg rounded-pill shadow px-5">
+            Crear Nuevo Usuario
+        </a>
+    </div>
+
+    <!-- Buscador -->
+    <div class="row mb-4">
+        <div class="col-md-6 offset-md-3">
+            <input type="text" id="buscador" class="form-control form-control-lg rounded-pill shadow" 
+                   placeholder="Buscar por nombre, email o ciudad..." 
+                   style="background-color: #64c1ff; color: #131128; font-family: 'bobby';">
+        </div>
+    </div>
+
+    <!-- Tabla -->
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead style="background: linear-gradient(135deg, #131128, #ff0088); color: white;">
+                <tr class="text-center">
+                    <th class="bobby">ID</th>
+                    <th class="bobby">Nombre Completo</th>
+                    <th class="bobby">Email</th>
+                    <th class="bobby">Teléfono</th>
+                    <th class="bobby">Ciudad / Estado</th>
+                    <th class="bobby">País</th>
+                    <th class="bobby">Acciones</th>
+                </tr>
+            </thead>
+            <tbody class="table-light">
+                {% for u in usuarios %}
+                <tr class="fila-usuario text-center align-middle">
+                    <td><span class="badge bg-warning text-dark">{{ u.id }}</span></td>
+                    <td class="fw-bold" style="color: #ff0088;">{{ u.nombre }} {{ u.apellido }}</td>
+                    <td><strong>{{ u.email }}</strong></td>
+                    <td>{{ u.telefono|default:"—" }}</td>
+                    <td>{{ u.ciudad }}, {{ u.estado }}</td>
+                    <td><span class="badge" style="background-color: #ffae00; color: #131128;">{{ u.get_pais_display }}</span></td>
+                    <td>
+                        <!-- BOTONES FUNCIONALES -->
+                        <a href="{% url 'actualizar_usuario' u.id %}" class="btn btn-sm btn-outline-primary rounded-pill">
+                            Actualizar
+                        </a>
+                        <a href="{% url 'eliminar_usuario' u.id %}" 
+                           class="btn btn-sm btn-outline-danger rounded-pill"
+                           onclick="return confirm('¿Seguro que quieres eliminar a {{ u.nombre }} {{ u.apellido }}?')">
+                            Eliminar
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="text-center py-5">
+                        <h4 class="text-muted bobby">Aún no hay usuarios registrados</h4>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+document.getElementById('buscador').addEventListener('keyup', function() {
+    let filtro = this.value.toLowerCase();
+    document.querySelectorAll('.fila-usuario').forEach(fila => {
+        fila.style.display = fila.textContent.toLowerCase().includes(filtro) ? '' : 'none';
+    });
+});
+</script>
+{% endblock %}

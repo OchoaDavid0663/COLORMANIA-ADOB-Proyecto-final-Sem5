@@ -1,0 +1,99 @@
+{% extends "colormania/admin/base_admin.html" %}
+{% load static %}
+
+{% block title %}Actualizar Pedido #{{ p.id }} - Admin{% endblock %}
+
+{% block content %}
+<div class="container mt-1 pt-1">
+    <div class="text-center mb-5">
+        <h1 class="bobby display-3" style="color: #ff0088;">
+            ACTUALIZAR PEDIDO
+        </h1>
+        <p class="lead bobby fs-3" style="color: #131128;">ID: #{{ p.id }}</p>
+    </div>
+
+    <div class="card shadow-lg mx-auto" style="max-width: 800px; border-radius: 30px; overflow: hidden;">
+        <!-- Encabezado con Gradiente Azul/Oscuro para diferenciar de Usuarios -->
+        <div class="card-header text-white text-center py-4" 
+             style="background: linear-gradient(135deg, #ff0088, #64c1ff);">
+            <h3 class="bobby mb-0">Gestionar Envío</h3>
+        </div>
+
+        <div class="card-body p-5">
+            
+            <!-- RESUMEN RÁPIDO DEL PEDIDO (Solo Lectura) -->
+            <div class="bg-light p-4 rounded-4 mb-5 border">
+                <div class="row text-center">
+                    <div class="col-md-4 mb-3 mb-md-0">
+                        <small class="text-muted fw-bold">CLIENTE</small><br>
+                        <span class="fs-5 bobby" style="color: #ff0088;">{{ p.usuario.nombre }} {{ p.usuario.apellido }}</span>
+                    </div>
+                    <div class="col-md-4 mb-3 mb-md-0">
+                        <small class="text-muted fw-bold">TOTAL COMPRA</small><br>
+                        <span class="fs-4 fw-bold text-dark">${{ p.total_compra }}</span>
+                    </div>
+                    <div class="col-md-4">
+                        <small class="text-muted fw-bold">MÉTODO PAGO</small><br>
+                        <span class="badge bg-secondary rounded-pill">{{ p.metodo_pago }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FORMULARIO DE ACTUALIZACIÓN -->
+            <form method="post">
+                {% csrf_token %}
+                <div class="row g-4 align-items-center">
+                    
+                    <!-- 1. CAMBIAR ESTADO (Select manual) -->
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold ms-3">Estado del Envío:</label>
+                        <select name="estado_envio" class="form-select form-select-lg rounded-pill" style="border: 2px solid #64c1ff;">
+                            <option value="Pendiente" {% if p.estado_envio == 'Pendiente' %}selected{% endif %}>Pendiente</option>
+                            <option value="Preparando" {% if p.estado_envio == 'Preparando' %}selected{% endif %}>Preparando</option>
+                            <option value="Enviado" {% if p.estado_envio == 'Enviado' %}selected{% endif %}>Enviado</option>
+                            <option value="Entregado" {% if p.estado_envio == 'Entregado' %}selected{% endif %}>Entregado</option>
+                            <option value="Cancelado" {% if p.estado_envio == 'Cancelado' %}selected{% endif %}>Cancelado</option>
+                        </select>
+                    </div>
+
+                    <!-- 2. CAMBIAR FECHA LLEGADA -->
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold ms-3">Fecha Estimada de Llegada:</label>
+                        <!-- El filtro |date:'Y-m-d' es vital para que el input date muestre el valor -->
+                        <input type="date" name="fecha_llegada" value="{{ p.fecha_llegada|date:'Y-m-d' }}" 
+                               class="form-control form-control-lg rounded-pill">
+                    </div>
+
+                    <!-- 3. BOTONES RÁPIDOS (Lo que pediste) -->
+                    <div class="col-12 mt-4">
+                        <label class="form-label fw-bold ms-3 mb-2">Acciones Rápidas:</label>
+                        <div class="d-flex gap-2 justify-content-center flex-wrap">
+                            <!-- Estos botones envían el formulario cambiando el valor del estado via JS o Backend -->
+                            <!-- Opción sencilla: Submit con nombre y valor -->
+                            <button type="submit" name="accion_rapida" value="Preparando" class="btn btn-outline-primary rounded-pill bobby">
+                                <i class="fas fa-box"></i> Marcar Preparando
+                            </button>
+                            <button type="submit" name="accion_rapida" value="Enviado" class="btn btn-outline-info rounded-pill bobby">
+                                <i class="fas fa-shipping-fast"></i> Marcar Enviado
+                            </button>
+                            <button type="submit" name="accion_rapida" value="Entregado" class="btn btn-outline-success rounded-pill bobby">
+                                <i class="fas fa-check-circle"></i> Marcar Entregado
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="col-12 mt-5 text-center">
+                        <hr class="mb-5">
+                        <a href="{% url 'admin_pedidos' %}" class="btn btn-secondary btn-lg rounded-pill px-5 me-2">
+                            Cancelar
+                        </a>
+                        <button type="submit" class="btn btn-primary btn-lg rounded-pill px-5 shadow-lg bobby">
+                            GUARDAR CAMBIOS
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

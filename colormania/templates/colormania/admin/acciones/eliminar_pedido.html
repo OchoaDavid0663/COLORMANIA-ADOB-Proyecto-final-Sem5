@@ -1,0 +1,55 @@
+{% extends "colormania/admin/base_admin.html" %}
+{% load static %}
+
+{% block title %}Eliminar Pedido - Admin{% endblock %}
+
+{% block content %}
+<div class="container mt-1 pt-1">
+    <div class="text-center mb-5">
+        <h1 class="bobby display-3 text-danger">
+            ¿ELIMINAR PEDIDO?
+        </h1>
+        <p class="lead bobby fs-3 text-muted">
+            Esta acción borrará el historial de compra y <strong>NO se puede deshacer</strong>
+        </p>
+    </div>
+
+    <div class="card shadow-lg mx-auto border-danger" style="max-width: 600px; border-radius: 30px; overflow: hidden;">
+        <div class="card-body text-center p-5">
+            <!-- Icono representativo de caja/pedido eliminandose -->
+            <div class="mb-4 position-relative d-inline-block">
+                <i class="fas fa-box fa-6x text-muted opacity-50"></i>
+                <i class="fas fa-times-circle fa-4x text-danger position-absolute top-0 start-100 translate-middle"></i>
+            </div>
+            
+            <h2 class="bobby" style="color: #131128;">
+                Pedido #{{ p.id }}
+            </h2>
+            
+            <div class="mt-3 mb-4">
+                <p class="fs-4 mb-1" style="color: #ff0088;">
+                    <strong>Total: ${{ p.total_compra }}</strong>
+                </p>
+                <p class="text-muted fs-5 mb-1">
+                    Cliente: {{ p.usuario.nombre }} {{ p.usuario.apellido }}
+                </p>
+                <p class="text-muted small">
+                    Fecha: {{ p.fecha|date:"d M Y, H:i" }} • Método: {{ p.metodo_pago }}
+                </p>
+            </div>
+
+            <!-- Botones de Acción -->
+            <form method="post" class="d-inline">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger btn-lg rounded-pill px-5 shadow bobby">
+                    Sí, Eliminar Pedido
+                </button>
+            </form>
+
+            <a href="{% url 'admin_pedidos' %}" class="btn btn-secondary btn-lg rounded-pill px-5 ms-3 bobby">
+                No, Cancelar
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,127 @@
+{% extends 'colormania/base.html' %}
+{% load static %}
+
+{% block title %}Admin Login - COLORMANIA{% endblock %}
+
+{% block content %}
+<style>
+    /* Estilos específicos para login_admin.html */
+    .admin-login-container {
+        max-width: 400px;
+        margin: 80px auto;
+        padding: 30px;
+        background-color: #131128; /* Fondo oscuro de la paleta */
+        border-radius: 10px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+        text-align: center;
+        border: 2px solid #ffae00; /* Borde de color de la paleta */
+    }
+
+    .admin-login-title {
+        font-family: 'brydan';
+        color: #ffe100;
+        font-size: 2.2em;
+        margin-bottom: 25px;
+    }
+
+    .form-admin-group label {
+        font-family: 'sans';
+        color: #64c1ff;
+        font-weight: bold;
+        text-align: left;
+        display: block;
+        margin-bottom: 8px;
+    }
+
+    .form-admin-control {
+        border-radius: 8px;
+        border: 1px solid #ff0088;
+        padding: 10px 12px;
+        font-size: 1em;
+        background-color: #2a283f; /* Fondo de campo más oscuro */
+        color: #ffe100;
+        transition: all 0.3s ease;
+    }
+
+    .form-admin-control::placeholder {
+        color: rgba(255, 225, 0, 0.5);
+    }
+
+    .form-admin-control:focus {
+        border-color: #ffae00;
+        box-shadow: 0 0 0 0.2rem rgba(255, 174, 0, 0.2);
+        background-color: #3b3952;
+    }
+
+    .btn-admin-login {
+        background-color: #ffae00;
+        color: #131128;
+        font-family: 'bobby';
+        font-size: 1.3em;
+        padding: 10px 25px;
+        border-radius: 40px;
+        border: none;
+        box-shadow: 0 3px 10px rgba(255, 174, 0, 0.4);
+        transition: all 0.3s ease;
+        width: 100%;
+        margin-top: 20px;
+    }
+
+    .btn-admin-login:hover {
+        background-color: #e09b00;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(255, 174, 0, 0.5);
+    }
+
+    .alert-admin-error {
+        background-color: #ff0088;
+        color: #ffe100;
+        border-color: #ff0088;
+        font-family: 'sans';
+        border-radius: 8px;
+        padding: 10px 15px;
+        margin-top: 15px;
+        text-align: left;
+        animation: fadeIn 0.5s ease-out;
+    }
+
+    @media (max-width: 768px) {
+        .admin-login-container {
+            margin: 50px 15px;
+            padding: 25px;
+        }
+        .admin-login-title {
+            font-size: 1.8em;
+        }
+        .btn-admin-login {
+            font-size: 1.1em;
+            padding: 8px 20px;
+        }
+    }
+</style>
+
+<div class="admin-login-container">
+    <h2 class="admin-login-title">Acceso de Administrador</h2>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-admin-error mb-3" role="alert">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <form method="post">
+        {% csrf_token %}
+        <div class="mb-3 text-start form-admin-group">
+            <label for="id_username" class="form-label">Usuario:</label>
+            <input type="text" class="form-admin-control" id="id_username" name="username" required placeholder="admin">
+        </div>
+        <div class="mb-3 text-start form-admin-group">
+            <label for="id_password" class="form-label">Contraseña:</label>
+            <input type="password" class="form-admin-control" id="id_password" name="password" required placeholder="1234">
+        </div>
+        <button type="submit" class="btn-admin-login">Ingresar</button>
+    </form>
+</div>
+{% endblock %}

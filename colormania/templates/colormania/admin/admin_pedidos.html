@@ -1,0 +1,156 @@
+{% extends "colormania/admin/base_admin.html" %}
+{% load static %}
+
+{% block title %}Admin • Pedidos - COLORMANIA{% endblock %}
+
+{% block content %}
+<div class="container mt-0 pt-0">
+    <div class="text-center mb-4">
+        <h1 class="bobby display-4" style="color: #64c1ff;">
+            <i class="fas fa-boxes me-2"></i> Gestión de Pedidos
+        </h1>
+        <p class="text-muted bobby fs-4">Revisa y administra las compras de los usuarios</p>
+    </div>
+
+    <!-- Buscador -->
+    <div class="row mb-4">
+        <div class="col-md-6 offset-md-3">
+            <input type="text" id="buscador" class="form-control form-control-lg rounded-pill shadow" 
+                   placeholder="Buscar por ID, Usuario o Estado..." 
+                   style="background-color: #ff0088; color: white; font-family: 'bobby'; border: none;">
+                   <!-- Nota: Cambié el fondo a rosa para diferenciarlo de usuarios, pero mantiene el estilo -->
+        </div>
+    </div>
+
+    <!-- Tabla -->
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <!-- Encabezado con gradiente invertido para variedad -->
+            <thead style="background: linear-gradient(135deg, #ff0088, #131128); color: white;">
+                <tr class="text-center">
+                    <th class="bobby">ID Pedido</th>
+                    <th class="bobby">Fecha</th>
+                    <th class="bobby">Cliente</th>
+                    <th class="bobby">Método Pago</th>
+                    <th class="bobby">Total</th>
+                    <th class="bobby">Estado Envío</th>
+                    <th class="bobby">Acciones</th>
+                </tr>
+            </thead>
+            <tbody class="table-light">
+                {% for p in pedidos %}
+                <tr class="fila-pedido text-center align-middle">
+                    <td>
+                        <span class="badge bg-dark rounded-pill">#{{ p.id }}</span>
+                    </td>
+                    <td>{{ p.fecha|date:"d/m/Y H:i" }}</td>
+                    
+                    <td class="text-start ps-4">
+                        <div class="fw-bold" style="color: #ff0088;">{{ p.usuario.nombre }} {{ p.usuario.apellido }}</div>
+                        <small class="text-muted">{{ p.usuario.email }}</small>
+                    </td>
+
+                    <td>
+                        {% if p.metodo_pago == 'TARJETA' %}
+                            <span class="badge bg-primary"><i class="fas fa-credit-card"></i> Tarjeta</span>
+                        {% elif p.metodo_pago == 'MERCADO_PAGO' %}
+                            <span class="badge bg-info text-dark"><i class="fas fa-handshake"></i> MP</span>
+                        {% else %}
+                            <span class="badge bg-warning text-dark"><i class="fas fa-store"></i> OXXO</span>
+                        {% endif %}
+                    </td>
+
+                    <td class="fw-bold fs-5" style="color: #131128;">
+                        ${{ p.total_compra }}
+                    </td>
+
+                    <td>
+                        <!-- Lógica de colores para el estado -->
+                        {% if "Entregado" in p.estado_envio %}
+                            <span class="badge bg-success rounded-pill px-3">{{ p.estado_envio }}</span>
+                        {% elif "Cancelado" in p.estado_envio %}
+                            <span class="badge bg-danger rounded-pill px-3">{{ p.estado_envio }}</span>
+                        {% else %}
+                            <span class="badge bg-warning text-dark rounded-pill px-3">{{ p.estado_envio }}</span>
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        <!-- BOTONES FUNCIONALES -->
+                        <!-- Botón Ver Detalle (Podrías crear un modal o una vista nueva) -->
+                        <button type="button" class="btn btn-sm btn-outline-info rounded-pill" 
+                                data-bs-toggle="modal" data-bs-target="#detalleModal{{ p.id }}">
+                            <i class="fas fa-eye"></i> Ver
+                        </button>
+
+                        <!-- Botón Eliminar -->
+                        <a href="{% url 'actualizar_pedido' p.id %}" class="btn btn-sm btn-outline-primary rounded-pill">
+                            Actualizar
+                        </a>
+                        <a href="{% url 'eliminar_pedido' p.id %}" 
+                            class="btn btn-sm btn-outline-danger rounded-pill"
+                            onclick="return confirm('¿Eliminar {{ p.id }}?')">
+                                Eliminar
+                        </a>
+                    </td>
+                </tr>
+
+                <!-- MODAL DE DETALLE RÁPIDO PARA CADA PEDIDO -->
+                <div class="modal fade" id="detalleModal{{ p.id }}" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content" style="border-radius: 20px;">
+                            <div class="modal-header bg-light">
+                                <h5 class="modal-title bobby" style="color: #ff0088;">Detalle Pedido #{{ p.id }}</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body text-start">
+                                <p><strong>Dirección:</strong> {{ p.usuario.calle }} #{{ p.usuario.num_domicilio }}, {{ p.usuario.ciudad }}</p>
+                                <hr>
+                                <h6>Productos:</h6>
+                                <ul class="list-group">
+                                    {% for item in p.items.all %}
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            {{ item.nombre_producto }}
+                                            <span class="badge bg-primary rounded-pill">{{ item.cantidad }}</span>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary rounded-pill" data-bs-dismiss="modal">Cerrar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="text-center py-5">
+                        <i class="fas fa-box-open fa-3x text-muted mb-3"></i>
+                        <h4 class="text-muted bobby">No hay pedidos registrados</h4>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- SCRIPT DE BUSCADOR (Igual al de usuarios) -->
+<script>
+document.getElementById('buscador').addEventListener('keyup', function() {
+    let filtro = this.value.toLowerCase();
+    document.querySelectorAll('.fila-pedido').forEach(fila => {
+        // Buscamos en todo el texto de la fila (ID, nombre, estado, etc.)
+        fila.style.display = fila.textContent.toLowerCase().includes(filtro) ? '' : 'none';
+    });
+});
+</script>
+
+<!-- Estilos extra para el placeholder del buscador en rosa -->
+<style>
+    #buscador::placeholder {
+        color: rgba(255, 255, 255, 0.7);
+    }
+</style>
+{% endblock %}
